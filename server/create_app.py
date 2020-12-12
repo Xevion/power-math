@@ -1,6 +1,14 @@
-from flask import Flask, render_template
+"""
+create_app.py
+
+The main app creation, registering extensions, API routes, the Vue.js catch all redirect and configs.
+"""
+
+from flask import Flask, render_template, jsonify
 from flask_restful import Api
 
+from server import exceptions
+from server.api import Question, Questions, Category, Categories
 from server.config import configs
 
 
@@ -12,27 +20,23 @@ def create_app(env=None):
     )
 
     # Instantiate Flask-Restful API and register appropriate routes
-    from server.api import Question, Category, Categories
     api = Api(app, prefix='/api/')
     api.add_resource(Question, '/question/', '/question/<string:question_id>')
     api.add_resource(Category, '/category/<string:category_id>')
     api.add_resource(Categories, '/categories/')
+    api.add_resource(Questions, '/questions/')
 
     if not env:
         env = app.config['ENV']
     app.config.from_object(configs[env])
 
-    # @app.shell_context_processor
-    # def shell_context():
-    #     pass
-
-    with app.app_context():
-        # noinspection PyUnresolvedReferences
-        from server import api
-
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
     def catch_all(path):
         return render_template("index.html")
+
+    @app.errorhandler(exceptions.APIException)
+    def api_exceptions(e):
+        return jsonify(e.json()), e.status_code
 
     return app
