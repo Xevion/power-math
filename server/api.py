@@ -58,7 +58,7 @@ class Question(Resource):
         args = parser.parse_args()
 
         # Generate new Question ID
-        q_id = Nonewt
+        q_id = None
         while q_id in active_questions.keys() or q_id is None:
             q_id = generate_id(5)
 
@@ -78,7 +78,7 @@ class Question(Resource):
         question = copy.copy(active_questions[q_id])
         del question['answer']
 
-        return 201, question
+        return question, 201
 
     def delete(self, question_id):
         """Delete a question object from the running before it is automatically removed."""

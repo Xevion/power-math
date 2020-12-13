@@ -58,7 +58,7 @@ def simplify_fraction():
 
     return {
         'type': inspect.stack()[0][3],
-        'question': f'Simplify. \\frac{{{c}}}{{{d}}}',
+        'question': f'\\frac{{{c}}}{{{d}}}',
         'answer': f'{a}/{b}'
     }
 

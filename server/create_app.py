@@ -6,6 +6,7 @@ The main app creation, registering extensions, API routes, the Vue.js catch all 
 
 from flask import Flask, render_template, jsonify
 from flask_restful import Api
+from flask_cors import CORS
 
 from server import exceptions
 from server.api import Question, Questions, Category, Categories
@@ -18,6 +19,9 @@ def create_app(env=None):
         static_folder="./../dist/static",
         template_folder="./../dist"
     )
+
+    # Add CORS support
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     # Instantiate Flask-Restful API and register appropriate routes
     api = Api(app, prefix='/api/')

@@ -5,6 +5,7 @@ Stores all API exceptions neatly for importing and usage elsewhere.
 """
 from typing import Tuple
 
+
 # TODO: Improve exception management to cut down needless class definitions.
 # TODO: Add 'extra' message parameter to base APIException kwargs.
 
@@ -73,7 +74,6 @@ class InvalidURIParam(APIException):
         error = super().json()
         error['error']['param'] = self.route_param
         return error
-
 
 
 class InvalidQuestion(InvalidURIParam):
