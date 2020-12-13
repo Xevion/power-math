@@ -31,7 +31,7 @@ def multiplication():
     b = random.randint(2, 26 - a)
     return {
         'type': inspect.stack()[0][3],
-        'question': f'{a} x {b}',
+        'question': f'{a}\\times {b}',
         'answer': a * b
     }
 
@@ -41,7 +41,7 @@ def division():
     b = random.randint(2, 26 - a)
     return {
         'type': inspect.stack()[0][3],
-        'question': f'{a * b} ÷ {b}',
+        'question': f'{a * b}\\div {b}',
         'answer': a
     }
 
@@ -59,7 +59,7 @@ def simplify_fraction():
     return {
         'type': inspect.stack()[0][3],
         'question': f'Simplify. \\frac{{{c}}}{{{d}}}',
-        'answer': f'{c}/{d}'
+        'answer': f'{a}/{b}'
     }
 
 
