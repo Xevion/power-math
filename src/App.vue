@@ -5,7 +5,7 @@
             <div class="columns is-centered">
                 <div class="column is-three-fifths">
                     <b-field id="input" @keyup.native.enter="checkAnswer()">
-                        <b-input v-model="answer"></b-input>
+                        <b-input :custom-class="input_shake" v-model="answer"></b-input>
                     </b-field>
                 </div>
             </div>
@@ -14,6 +14,8 @@
 </template>
 
 <style lang="scss">
+@import "./src/scss/shake.scss";
+
 html, body, #app {
     height: 100%;
     min-height: 100%;
@@ -62,6 +64,10 @@ a, p, span {
         user-select: none;
     }
 }
+
+.notices .toast {
+    padding: 0.6em 1.35em !important;
+}
 </style>
 
 <script>
@@ -73,13 +79,17 @@ export default {
         return {
             answer: null,
             currentQuestion: null,
-            correctTimeout: false
+            correctTimeout: false,
+            shakeInput: false
         }
     },
     computed: {
         expression() {
             return this.currentQuestion != null ? this.currentQuestion.text : "error";
         },
+        input_shake() {
+            return this.shakeInput ? "shake" : "";
+        }
     },
     created() {
         window.addEventListener('keyup', (e) => {
@@ -112,7 +122,7 @@ export default {
                 this.$buefy.toast.open({
                     message: 'Correct!',
                     type: 'is-success',
-                    duration: 6000
+                    duration: 600
                 })
                 this.nextQuestion();
                 this.answer = "";
@@ -121,9 +131,16 @@ export default {
                 this.$buefy.toast.open({
                     message: 'Incorrect.',
                     type: 'is-danger',
-                    duration: 5000
+                    duration: 500
                 })
+
+                // Shake input
+                this.shakeInput = true;
+                setTimeout(this.stopShake, 500);
             }
+        },
+        stopShake() {
+            this.shakeInput = false;
         }
     }
 }

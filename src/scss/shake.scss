@@ -1,0 +1,27 @@
+@keyframes shake {
+  0% {
+    border-color: rgba(#df4160, 10%);
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(0.2em);
+  }
+  40% {
+    transform: translate(-0.2em);
+  }
+  60% {
+    border-color: rgba(#df4160, 15%);
+    transform: translate(0.2em);
+  }
+  80% {
+    transform: translate(-0.2em);
+  }
+  100% {
+    transform: translate(0);
+    border-color: hsl(0, 0%, 20%);
+  }
+}
+
+#input input.shake {
+  animation: shake 0.5s;
+}
