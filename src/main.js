@@ -4,6 +4,7 @@ import Buefy from 'buefy';
 import App from './App.vue'
 import 'katex/dist/katex.min.css';
 import 'buefy/dist/buefy.css';
+import 'animate.css/animate.min.css';
 
 
 Vue.config.productionTip = false

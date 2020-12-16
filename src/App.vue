@@ -1,11 +1,11 @@
 <template>
     <div id="app">
-        <div id="expression" v-katex="expression"></div>
+        <div id="expression" class="animate__animated animate__faster" :class="currentAnimation" v-katex="expression"></div>
         <div class="container">
             <div class="columns is-centered">
                 <div class="column is-three-fifths">
                     <b-field id="input" @keyup.native.enter="checkAnswer()">
-                        <b-input :custom-class="input_shake" v-model="answer"></b-input>
+                        <b-input :custom-class="inputClass" v-model="answer"></b-input>
                     </b-field>
                 </div>
             </div>
@@ -80,21 +80,23 @@ export default {
             answer: null,
             currentQuestion: null,
             correctTimeout: false,
-            shakeInput: false
+            inputClass: false,
+            allowInputSubmit: true,
+            currentAnimation: null,
+            chances: 3
         }
     },
     computed: {
         expression() {
             return this.currentQuestion != null ? this.currentQuestion.text : "error";
-        },
-        input_shake() {
-            return this.shakeInput ? "shake" : "";
         }
     },
     created() {
         window.addEventListener('keyup', (e) => {
-            if (e.keyCode === 39) {
+            if (e.keyCode === 38) {
                 this.nextQuestion();
+            } else if (e.keyCode === 39) {
+                this.checkAnswer(true);
             }
         });
     },
@@ -104,10 +106,32 @@ export default {
         })
     },
     methods: {
-        nextQuestion() {
-            this.currentQuestion = arithmetic.methods.getProblem();
+        nextQuestion(fail = false) {
+            let problem = arithmetic.methods.getProblem();
+            if (this.currentQuestion == null)
+                this.currentQuestion = problem;
+            else {
+                // Animate fade out
+                if (fail)
+                    this.currentAnimation = 'animate__fadeOutRight'
+                else
+                    this.currentAnimation = 'animate__fadeOutUp';
+
+                // Fade in down
+                setTimeout(() => {
+                    this.currentQuestion = problem;
+                    this.currentAnimation = 'animate__fadeInDown';
+                    setTimeout(() => {
+                        this.currentAnimation = '';
+                    }, 500)
+                }, 200)
+            }
         },
-        checkAnswer() {
+        checkAnswer(force = false) {
+            // Skip answer checking if answer submission currently locked
+            if (!this.allowInputSubmit && !force)
+                return;
+
             // Check answer
             let correct;
             // Number parsing if the answer is a specific number
@@ -117,30 +141,33 @@ export default {
                 // String based answer (like a fraction)
                 correct = this.currentQuestion.answer === this.answer
 
-            if (correct) {
-                // Correct answer toast, new question & reset answer box
-                this.$buefy.toast.open({
-                    message: 'Correct!',
-                    type: 'is-success',
-                    duration: 600
-                })
+            if (correct || force) {
+                // Correct answer animation, new question & reset answer box
+                this.inputClass = 'correct';
+                setTimeout(this.clearInputClass, 500)
                 this.nextQuestion();
                 this.answer = "";
+
             } else {
-                // Incorrect answer toast
-                this.$buefy.toast.open({
-                    message: 'Incorrect.',
-                    type: 'is-danger',
-                    duration: 500
-                })
+                if (--this.chances === 0) {
+                    this.nextQuestion(true);
+                    this.chances = 3;
+                }
 
                 // Shake input
-                this.shakeInput = true;
-                setTimeout(this.stopShake, 500);
+                this.inputClass = 'incorrect';
+                setTimeout(this.clearInputClass, 500);
+
+                // Lock submission
+                this.allowInputSubmit = false;
+                setTimeout(this.unlockInput, 500)
             }
         },
-        stopShake() {
-            this.shakeInput = false;
+        clearInputClass() {
+            this.inputClass = '';
+        },
+        unlockInput() {
+            this.allowInputSubmit = true;
         }
     }
 }

@@ -22,6 +22,23 @@
   }
 }
 
-#input input.shake {
-  animation: shake 0.5s;
+@keyframes green_flash {
+  0% {
+    border-color: hsl(0, 0%, 20%);
+    //border-color: rgba(#41df5b, 2.5%);
+  }
+  60% {
+    border-color: rgba(#41df5b, 5%);
+  }
+  100% {
+    border-color: hsl(0, 0%, 20%);
+  }
+}
+
+#input input.incorrect {
+  animation: shake 0.5s ease-in-out;
+}
+
+#input input.correct {
+  animation: green_flash 0.5s ease-in-out;
 }
