@@ -19,25 +19,29 @@
 html, body, #app {
     height: 100%;
     min-height: 100%;
-    background: hsl(0, 0%, 6%)
 }
 
 #input {
     input {
         text-align: center;
         background-color: transparent;
+
+        // Border fixing
         border-color: hsl(0, 0%, 20%);
         border-left-width: 0;
         border-right-width: 0;
         border-radius: 0;
         color: hsl(0, 0%, 80%);
+
+        // Input box font related manipulation
         font-family: 'KaTeX_Main', serif;
         padding: 0;
         height: 1.3em;
         line-height: 0;
         font-size: 8em;
 
-        &:active, &:focus {
+        // Remove weird white box shadow
+        &, &:active, &:focus {
             box-shadow: none;
         }
     }

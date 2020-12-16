@@ -3,7 +3,7 @@ import VueKatex from 'vue-katex';
 import { Input, Field } from 'buefy';
 import App from './App.vue'
 import 'katex/dist/katex.min.css';
-import 'buefy/dist/buefy.css';
+import './scss/buefy.scss';
 import 'animate.css/animate.min.css';
 
 

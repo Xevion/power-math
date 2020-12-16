@@ -1,0 +1,10 @@
+// Import Bulma's core
+@import "~bulma/sass/utilities/_all";
+
+// Dark Mode
+$scheme-main: hsl(0, 0%, 6%);
+$scheme-invert: $white;
+
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
