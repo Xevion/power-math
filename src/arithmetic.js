@@ -35,6 +35,15 @@ export default {
                 answer: a * b
             }
         },
+        division(mult = 1) {
+            let a = utils.methods.getRandomInt(3 * mult, 30 * mult);
+            let b = utils.methods.getRandomInt(2 * mult, 15 * mult);
+            return {
+                text: `${a * b} \\div ${b}`,
+                answer: a
+            }
+
+        },
         square_root(mult = 1) {
             let a = utils.methods.getRandomInt(2 * mult, 20 * mult);
             return {
@@ -43,7 +52,7 @@ export default {
             }
         },
         getProblem: function () {
-            let possible = [this.multiplication, this.square_root];
+            let possible = [this.addition, this.subtraction, this.multiplication, this.division, this.square_root];
             let index = utils.methods.getRandomInt(0, possible.length);
             return possible[index]();
         }
