@@ -29,6 +29,7 @@
 ### To-do
 
 - Create help/welcome screen
+- Create about screen
 - Create configuration screen
     - Adjust question type pool
     - Adjust each question type's difficulty (multiplier)
