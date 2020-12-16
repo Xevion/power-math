@@ -44,6 +44,7 @@
         - Radian/degree conversion
         - Sin/Cos/Tan/Csc/Sec/Cot evaluation
         - Inverse trig evaluation
+        - Popular pythagorean triples
     - Geometry
     - Computer Science
         - Bin/Hex/Oct conversion
