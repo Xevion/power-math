@@ -1,6 +1,12 @@
 <template>
     <div id="app">
-        <div id="expression" class="animate__animated animate__faster" :class="currentAnimation" v-katex="expression"></div>
+        <div class="columns is-justify-content-end pt-2">
+            <div class="column is-1 mr-2">
+                <b-icon @click.native="openSettings" id="settingsCog" pack="fas" icon="cog" custom-size="3x"></b-icon>
+            </div>
+        </div>
+        <div id="expression" class="animate__animated animate__faster" :class="currentAnimation"
+             v-katex="expression"></div>
         <div class="container">
             <div class="columns is-centered">
                 <div class="column is-three-fifths">
@@ -19,6 +25,16 @@
 html, body, #app {
     height: 100%;
     min-height: 100%;
+    max-height: 100%;
+}
+
+html {
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+html::-webkit-scrollbar {
+    width: 0px; /* For Chrome, Safari, and Opera */
 }
 
 #input {
@@ -69,6 +85,11 @@ a, p, span {
     }
 }
 
+#settingsCog {
+    cursor: pointer;
+    float: right;
+}
+
 .notices .toast {
     padding: 0.6em 1.35em !important;
 }
@@ -84,9 +105,9 @@ export default {
             answer: null,
             currentQuestion: null,
             correctTimeout: false,
-            inputClass: false,
+            inputClass: '',
             allowInputSubmit: true,
-            currentAnimation: null,
+            currentAnimation: '',
             chances: 3
         }
     },
@@ -172,6 +193,9 @@ export default {
         },
         unlockInput() {
             this.allowInputSubmit = true;
+        },
+        openSettings() {
+
         }
     }
 }
