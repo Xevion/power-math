@@ -1,0 +1,23 @@
+// Ensure the app area always expands to 100% of the screen
+html, body, #app {
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+}
+
+// Disable scrollbar
+html {
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+    &::-webkit-scrollbar {
+        width: 0px; /* For Chrome, Safari, and Opera */
+    }
+}
+
+// Make toast notifications smaller
+.notices .toast {
+    padding: 0.6em 1.35em !important;
+}
+
+@import "./latex.scss";
+@import "./shake.scss";

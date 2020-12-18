@@ -1,8 +1,9 @@
 <template>
     <div id="app">
-        <div class="columns is-justify-content-end pt-2">
+        <div class="columns is-justify-content-flex-end pt-2">
             <div class="column is-1 mr-2">
-                <b-icon @click.native="isSettingsMenuActive = true" id="settingsCog" pack="fas" icon="cog" custom-size="3x"></b-icon>
+                <b-icon @click.native="isSettingsMenuActive = true" class="is-clickable is-pulled-right" pack="fas" icon="cog"
+                        custom-size="3x"></b-icon>
                 <b-modal
                     v-model="isSettingsMenuActive"
                     has-modal-card
@@ -31,81 +32,7 @@
 </template>
 
 <style lang="scss">
-@import "./src/scss/shake.scss";
-
-html, body, #app {
-    height: 100%;
-    min-height: 100%;
-    max-height: 100%;
-}
-
-html {
-    scrollbar-width: none; /* For Firefox */
-    -ms-overflow-style: none; /* For Internet Explorer and Edge */
-}
-
-html::-webkit-scrollbar {
-    width: 0px; /* For Chrome, Safari, and Opera */
-}
-
-#input {
-    input {
-        text-align: center;
-        background-color: transparent;
-
-        // Border fixing
-        border-color: hsl(0, 0%, 20%);
-        border-left-width: 0;
-        border-right-width: 0;
-        border-radius: 0;
-        color: hsl(0, 0%, 80%);
-
-        // Input box font related manipulation
-        font-family: 'KaTeX_Main', serif;
-        padding: 0;
-        height: 1.3em;
-        line-height: 0;
-        font-size: 8em;
-
-        // Remove weird white box shadow
-        &, &:active, &:focus {
-            box-shadow: none;
-        }
-    }
-}
-
-a, p, span {
-    color: hsl(0, 0%, 91%);
-    #expression {
-        text-shadow: hsl(0, 0%, 5%) 5px 5px;
-    }
-}
-
-#question-text {
-    font-family: "Computer Modern", serif;
-}
-
-#expression {
-    width: 75%;
-    margin: 0 auto;
-    padding-bottom: 2em;
-    text-align: center;
-
-    .katex {
-        font-size: 16em !important;
-        white-space: nowrap;
-        user-select: none;
-    }
-}
-
-#settingsCog {
-    cursor: pointer;
-    float: right;
-}
-
-.notices .toast {
-    padding: 0.6em 1.35em !important;
-}
+@import "./src/scss/main.scss";
 </style>
 
 <script>
@@ -212,9 +139,6 @@ export default {
         },
         unlockInput() {
             this.allowInputSubmit = true;
-        },
-        openSettings() {
-
         }
     }
 }
