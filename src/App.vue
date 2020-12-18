@@ -2,7 +2,18 @@
     <div id="app">
         <div class="columns is-justify-content-end pt-2">
             <div class="column is-1 mr-2">
-                <b-icon @click.native="openSettings" id="settingsCog" pack="fas" icon="cog" custom-size="3x"></b-icon>
+                <b-icon @click.native="isSettingsMenuActive = true" id="settingsCog" pack="fas" icon="cog" custom-size="3x"></b-icon>
+                <b-modal
+                    v-model="isSettingsMenuActive"
+                    has-modal-card
+                    trap-focus
+                    :destroy-on-hide="false"
+                    aria-role="dialog"
+                    aria-modal>
+                    <template #default="props">
+                        <SettingsMenu v-bind="settings" @close="props.close"></SettingsMenu>
+                    </template>
+                </b-modal>
             </div>
         </div>
         <div id="expression" class="animate__animated animate__faster" :class="currentAnimation"
@@ -65,7 +76,9 @@ html::-webkit-scrollbar {
 
 a, p, span {
     color: hsl(0, 0%, 91%);
-    text-shadow: hsl(0, 0%, 5%) 5px 5px;
+    #expression {
+        text-shadow: hsl(0, 0%, 5%) 5px 5px;
+    }
 }
 
 #question-text {
@@ -97,9 +110,11 @@ a, p, span {
 
 <script>
 import arithmetic from './arithmetic.js';
+import SettingsMenu from "@/components/SettingsMenu";
 
 export default {
     name: 'App',
+    components: {SettingsMenu},
     data() {
         return {
             answer: null,
@@ -108,7 +123,11 @@ export default {
             inputClass: '',
             allowInputSubmit: true,
             currentAnimation: '',
-            chances: 3
+            chances: 3,
+            settings: {
+                levels: []
+            },
+            isSettingsMenuActive: false
         }
     },
     computed: {
