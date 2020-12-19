@@ -21,15 +21,28 @@ $grey-lightest: hsl(0, 0%, 22%);
 
 $button-border-width: 0;
 $button-hover-color: $grey-darker;
+$button-background-color: lighten($scheme-main, 0.5%);
 
 // Import Bulma and Buefy styles
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
 
 // Special button class that disables hover/active/focus effects
-.button.button-unhoverable {
-  &:hover, &:active, &:focus, .is-hovered, .is-active, .is-focused {
-    border-color: $button-border-color;
-    color: $text-strong !important;
+.button {
+  // Text/border changes
+  &.button-unhoverable {
+    &:hover, &:active, &:focus, &.is-hovered, &.is-active, &.is-focused {
+      border-color: $button-border-color !important;
+      color: $text-strong !important;
+    }
+  }
+  // Focused button link box shadow
+  &:not(:active) {
+    &:focus, &.is-focused {
+      box-shadow: none;
+    }
+  }
+  &.darker {
+    background-color: darken($scheme-main, 3%);
   }
 }

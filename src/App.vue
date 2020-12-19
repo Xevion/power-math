@@ -36,11 +36,12 @@
 </style>
 
 <script>
-import arithmetic from './arithmetic.js';
+import problems from "@/problems";
 import SettingsMenu from "@/components/SettingsMenu";
 
 export default {
     name: 'App',
+    mixins: [problems],
     components: {SettingsMenu},
     data() {
         return {
@@ -78,7 +79,7 @@ export default {
     },
     methods: {
         nextQuestion(fail = false) {
-            let problem = arithmetic.methods.getProblem();
+            let problem = this.getProblem();
             if (this.currentQuestion == null)
                 this.currentQuestion = problem;
             else {

@@ -3,17 +3,17 @@ import utils from '@/utils';
 export default {
     methods: {
         // Generate a addition problem
-        addition(mult = 1) {
-            let a = utils.methods.getRandomInt(5 * mult, 100 * mult);
-            let b = utils.methods.getRandomInt(5 * mult, 100 * mult);
+        addition(options) {
+            let a = utils.methods.getRandomInt(options.low, options.high);
+            let b = utils.methods.getRandomInt(options.low, options.high);
             return {
                 text: `${a} + ${b}`,
                 answer: a + b
             }
         },
-        subtraction(mult = 1) {
-            let a = utils.methods.getRandomInt(5 * mult, 100 * mult);
-            let b = utils.methods.getRandomInt(5 * mult, 100 * mult);
+        subtraction(options) {
+            let a = utils.methods.getRandomInt(options.low, options.high);
+            let b = utils.methods.getRandomInt(options.low, options.high);
             if (Math.random() > 0.5)
                 return {
                     text: `${a} - ${b}`,
@@ -49,11 +49,6 @@ export default {
                 text: `\\sqrt{${a * a}}`,
                 answer: a
             }
-        },
-        getProblem: function () {
-            let possible = [this.addition, this.subtraction, this.multiplication, this.division, this.square_root];
-            let index = utils.methods.getRandomInt(0, possible.length);
-            return possible[index]();
         }
     },
     data() {
@@ -63,30 +58,37 @@ export default {
                 {
                     name: 'Addition',
                     id: 'addition',
+                    description: 'Find the sum of two integers',
                     difficulties: [
                         {
                             id: 'easy',
                             name: 'Easy',
                             options: {
-                                multiplier: 1
-                            }
+                                low: 7,
+                                high: 50
+                            },
+                            style: 'is-success'
+                        },
+                        {
+                            id: 'medium',
+                            name: 'Medium',
+                            options: {
+                                low: 9,
+                                high: 100
+                            },
+                            style: 'is-warning'
                         },
                         {
                             id: 'hard',
                             name: 'Hard',
                             options: {
-                                multiplier: 2.5
-                            }
-                        },
-                        {
-                            id: 'very_hard',
-                            name: 'Very Hard',
-                            options: {
-                                multiplier: 4
-                            }
+                                low: 15,
+                                high: 150
+                            },
+                            style: 'is-danger'
                         }
                     ],
-                    method: self.addition,
+                    method: self.methods.addition,
                     enabled: true,
                     current: 0
                 }

@@ -7,7 +7,7 @@
         <section class="modal-card-body">
             <b-field addons v-for="(problemType, problemIndex) in problems" :key="problemType.id">
                 <p class="control">
-                    <b-button class="button-unhoverable" :hovered="false" style="cursor: default;">
+                    <b-button class="button-unhoverable darker" :hovered="false" style="cursor: default;">
                         {{ problemType.name }}
                     </b-button>
                 </p>
@@ -17,7 +17,7 @@
                     </b-button>
                 </p>
                 <p class="control" v-for="(difficulty, difficultyIndex) in problemType.difficulties" :key="difficulty.id">
-                    <b-button :type="problemType.enabled && problemType.current === difficultyIndex ? 'is-info' : ''"
+                    <b-button :type="problemType.enabled && problemType.current === difficultyIndex ? (difficulty.style || 'is-info') : ''"
                               :selected="problemType.enabled && problemType.current === difficultyIndex"
                                 @click.native="selectProblemDifficulty(problemIndex, difficultyIndex)">
                         {{ difficulty.name }}
