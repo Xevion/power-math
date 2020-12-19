@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueKatex from 'vue-katex';
-import {ConfigProgrammatic, Input, Field, Button, Icon, Modal} from 'buefy';
+import {ConfigProgrammatic, Input, Field, Button, Icon, Modal, Tooltip} from 'buefy';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {faCog, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
@@ -18,6 +18,8 @@ Vue.use(Field);
 Vue.use(Button);
 Vue.use(Icon);
 Vue.use(Modal);
+Vue.use(Tooltip);
+
 ConfigProgrammatic.setOptions({
     defaultIconComponent: 'vue-fontawesome',
     defaultIconPack: 'fas'
