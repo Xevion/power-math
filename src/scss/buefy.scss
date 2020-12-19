@@ -36,13 +36,21 @@ $button-background-color: lighten($scheme-main, 0.5%);
       color: $text-strong !important;
     }
   }
+
   // Focused button link box shadow
   &:not(:active) {
     &:focus, &.is-focused {
-      box-shadow: none;
+      box-shadow: none !important;
     }
   }
+
   &.darker {
     background-color: darken($scheme-main, 3%);
+  }
+}
+
+.field.has-addons {
+  .button {
+    z-index: auto !important;
   }
 }

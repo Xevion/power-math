@@ -19,5 +19,11 @@ html {
     padding: 0.6em 1.35em !important;
 }
 
+// Width utility classes
+.w-100 { width: 100%; }
+.w-75 { width: 75%; }
+.w-50 { width: 50%; }
+.w-25 { width: 25%; }
+
 @import "./latex.scss";
 @import "./shake.scss";
