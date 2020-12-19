@@ -12,7 +12,7 @@
                     aria-role="dialog"
                     aria-modal>
                     <template #default="props">
-                        <SettingsMenu v-bind="settings" @close="props.close"></SettingsMenu>
+                        <SettingsMenu :problems="problems" @close="props.close"></SettingsMenu>
                     </template>
                 </b-modal>
             </div>
@@ -52,9 +52,6 @@ export default {
             allowInputSubmit: true,
             currentAnimation: '',
             chances: 3,
-            settings: {
-                levels: []
-            },
             isSettingsMenuActive: false
         }
     },
