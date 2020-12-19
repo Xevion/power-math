@@ -236,7 +236,7 @@ export default {
                             style: 'is-danger'
                         }
                     ],
-                    method: self.methods.square,
+                    method: self.methods.square_root,
                     enabled: true,
                     current: 0
                 }
