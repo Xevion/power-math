@@ -13,6 +13,23 @@ $modal-background-background-color: bulmaRgba($scheme-main, 0.6);
 $modal-card-body-background-color: darken($background, 4%);
 $border: darken($modal-background-background-color, 30%);
 
+$grey-darker: hsl(0, 0%, 58%);
+$grey-dark: hsl(0, 0%, 53%);
+$grey: hsl(0, 0%, 42%);
+$grey-light: hsl(0, 0%, 32%);
+$grey-lightest: hsl(0, 0%, 22%);
+
+$button-border-width: 0;
+$button-hover-color: $grey-darker;
+
 // Import Bulma and Buefy styles
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
+
+// Special button class that disables hover/active/focus effects
+.button.button-unhoverable {
+  &:hover, &:active, &:focus, .is-hovered, .is-active, .is-focused {
+    border-color: $button-border-color;
+    color: $text-strong !important;
+  }
+}
