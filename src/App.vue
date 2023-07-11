@@ -57,7 +57,6 @@
             return {
                 answer: null,
                 currentQuestion: null,
-                correctTimeout: false,
                 inputClass: '',
                 allowInputSubmit: true,
                 currentAnimation: '',
