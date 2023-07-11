@@ -71,9 +71,9 @@
         },
         created() {
             window.addEventListener('keyup', (e) => {
-                if (e.keyCode === 38) {
+                if (e.key === 'ArrowUp') {
                     this.nextQuestion();
-                } else if (e.keyCode === 39) {
+                } else if (e.key === 'ArrowRight') {
                     this.checkAnswer(true);
                 }
             });
