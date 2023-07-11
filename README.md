@@ -21,9 +21,15 @@
 - Simple, easy to understand interface
 - Fun, playful and simple animations, colors and UI feedback.
 - 100% client-side - play or as long as you want, offline!
-- [ ] Configurable
+- [x] Configurable problem types and difficulty
 - [ ] Statistics
 - [ ] Lots of problems available
+
+### Controls
+
+- Type your answer and press Enter to submit.
+- Up arrow skips to the next problem.
+- Right arrow reveals the answer and moves on.
 
 
 ### To-do
