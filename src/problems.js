@@ -1,15 +1,18 @@
-import arithmetic from "@/arithmetic";
-import utils from "@/utils";
+import arithmetic from '@/arithmetic';
+import utils from '@/utils';
 
 export default {
     computed: {
-      availableProblems() {
-          return this.problems.filter(problem => problem.enabled);
-      }
+        availableProblems() {
+            return this.problems.filter((problem) => problem.enabled);
+        },
     },
     methods: {
         getProblem() {
-            let problemType = this.availableProblems[utils.methods.getRandomInt(0, this.availableProblems.length)];
+            let problemType =
+                this.availableProblems[
+                    utils.methods.getRandomInt(0, this.availableProblems.length)
+                ];
             let problem = null;
 
             // Begin looking for a 'unique'ish problem
@@ -23,12 +26,12 @@ export default {
 
             this.previousProblem = problem;
             return problem;
-        }
+        },
     },
     data() {
         return {
             previousProblem: null,
-            problems: arithmetic.data().problems
-        }
-    }
-}
+            problems: arithmetic.data().problems,
+        };
+    },
+};

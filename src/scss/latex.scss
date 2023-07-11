@@ -18,14 +18,16 @@
         font-size: 8em;
 
         // Remove weird white box shadow
-        &, &:active, &:focus {
+        &,
+        &:active,
+        &:focus {
             box-shadow: none;
         }
     }
 }
 
 .latex {
-    font-family: "Computer Modern", serif;
+    font-family: 'Computer Modern', serif;
 }
 
 #expression {

@@ -1,44 +1,44 @@
 @keyframes shake {
-  0% {
-    border-color: rgba(#df4160, 10%);
-    transform: translate(0);
-  }
-  20% {
-    transform: translate(0.2em);
-  }
-  40% {
-    transform: translate(-0.2em);
-  }
-  60% {
-    border-color: rgba(#df4160, 15%);
-    transform: translate(0.2em);
-  }
-  80% {
-    transform: translate(-0.2em);
-  }
-  100% {
-    transform: translate(0);
-    border-color: hsl(0, 0%, 20%);
-  }
+    0% {
+        border-color: rgba(#df4160, 10%);
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(0.2em);
+    }
+    40% {
+        transform: translate(-0.2em);
+    }
+    60% {
+        border-color: rgba(#df4160, 15%);
+        transform: translate(0.2em);
+    }
+    80% {
+        transform: translate(-0.2em);
+    }
+    100% {
+        transform: translate(0);
+        border-color: hsl(0, 0%, 20%);
+    }
 }
 
 @keyframes green_flash {
-  0% {
-    border-color: hsl(0, 0%, 20%);
-    //border-color: rgba(#41df5b, 2.5%);
-  }
-  60% {
-    border-color: rgba(#41df5b, 5%);
-  }
-  100% {
-    border-color: hsl(0, 0%, 20%);
-  }
+    0% {
+        border-color: hsl(0, 0%, 20%);
+        //border-color: rgba(#41df5b, 2.5%);
+    }
+    60% {
+        border-color: rgba(#41df5b, 5%);
+    }
+    100% {
+        border-color: hsl(0, 0%, 20%);
+    }
 }
 
 #input input.incorrect {
-  animation: shake 0.5s ease-in-out;
+    animation: shake 0.5s ease-in-out;
 }
 
 #input input.correct {
-  animation: green_flash 0.5s ease-in-out;
+    animation: green_flash 0.5s ease-in-out;
 }

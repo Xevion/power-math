@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 // Import Bulma's core
-@import "~bulma/sass/utilities/_all";
+@import '~bulma/sass/utilities/_all';
 
 // Dark Mode
 $background: hsl(0, 0%, 13%);
@@ -24,33 +24,39 @@ $button-hover-color: $grey-darker;
 $button-background-color: lighten($scheme-main, 0.5%);
 
 // Import Bulma and Buefy styles
-@import "~bulma";
-@import "~buefy/src/scss/buefy";
+@import '~bulma';
+@import '~buefy/src/scss/buefy';
 
 // Special button class that disables hover/active/focus effects
 .button {
-  // Text/border changes
-  &.button-unhoverable {
-    &:hover, &:active, &:focus, &.is-hovered, &.is-active, &.is-focused {
-      border-color: $button-border-color !important;
-      color: $text-strong !important;
+    // Text/border changes
+    &.button-unhoverable {
+        &:hover,
+        &:active,
+        &:focus,
+        &.is-hovered,
+        &.is-active,
+        &.is-focused {
+            border-color: $button-border-color !important;
+            color: $text-strong !important;
+        }
     }
-  }
 
-  // Focused button link box shadow
-  &:not(:active) {
-    &:focus, &.is-focused {
-      box-shadow: none !important;
+    // Focused button link box shadow
+    &:not(:active) {
+        &:focus,
+        &.is-focused {
+            box-shadow: none !important;
+        }
     }
-  }
 
-  &.darker {
-    background-color: darken($scheme-main, 3%);
-  }
+    &.darker {
+        background-color: darken($scheme-main, 3%);
+    }
 }
 
 .field.has-addons {
-  .button {
-    z-index: auto !important;
-  }
+    .button {
+        z-index: auto !important;
+    }
 }

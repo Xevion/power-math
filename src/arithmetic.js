@@ -8,8 +8,8 @@ export default {
             let b = utils.methods.getRandomInt(options.low, options.high);
             return {
                 text: `${a} + ${b}`,
-                answer: a + b
-            }
+                answer: a + b,
+            };
         },
         subtraction(options) {
             let a = utils.methods.getRandomInt(options.low, options.high);
@@ -18,38 +18,36 @@ export default {
                 return {
                     text: `${a} - ${b}`,
                     answer: a - b,
-                }
+                };
             else
                 return {
                     text: `-${a} + ${b}`,
-                    answer: -a + b
-                }
-
+                    answer: -a + b,
+                };
         },
         multiplication(options) {
             let a = utils.methods.getRandomInt(options.low, options.high);
             let b = utils.methods.getRandomInt(options.low, options.high);
             return {
                 text: `${a} \\times ${b}`,
-                answer: a * b
-            }
+                answer: a * b,
+            };
         },
         division(options) {
             let a = utils.methods.getRandomInt(options.low, options.high);
             let b = utils.methods.getRandomInt(options.low, options.high);
             return {
                 text: `${a * b} \\div ${b}`,
-                answer: a
-            }
-
+                answer: a,
+            };
         },
         square_root(options) {
             let a = utils.methods.getRandomInt(options.low, options.high);
             return {
                 text: `\\sqrt{${a * a}}`,
-                answer: a
-            }
-        }
+                answer: a,
+            };
+        },
     },
     data() {
         let self = this;
@@ -65,32 +63,32 @@ export default {
                             name: 'Easy',
                             options: {
                                 low: 7,
-                                high: 50
+                                high: 50,
                             },
-                            style: 'is-success'
+                            style: 'is-success',
                         },
                         {
                             id: 'medium',
                             name: 'Medium',
                             options: {
                                 low: 30,
-                                high: 100
+                                high: 100,
                             },
-                            style: 'is-warning'
+                            style: 'is-warning',
                         },
                         {
                             id: 'hard',
                             name: 'Hard',
                             options: {
                                 low: 50,
-                                high: 200
+                                high: 200,
                             },
-                            style: 'is-danger'
-                        }
+                            style: 'is-danger',
+                        },
                     ],
                     method: self.methods.addition,
                     enabled: true,
-                    current: 0
+                    current: 0,
                 },
                 {
                     name: 'Subtraction',
@@ -102,32 +100,32 @@ export default {
                             name: 'Easy',
                             options: {
                                 low: 7,
-                                high: 50
+                                high: 50,
                             },
-                            style: 'is-success'
+                            style: 'is-success',
                         },
                         {
                             id: 'medium',
                             name: 'Medium',
                             options: {
                                 low: 20,
-                                high: 80
+                                high: 80,
                             },
-                            style: 'is-warning'
+                            style: 'is-warning',
                         },
                         {
                             id: 'hard',
                             name: 'Hard',
                             options: {
                                 low: 40,
-                                high: 110
+                                high: 110,
                             },
-                            style: 'is-danger'
-                        }
+                            style: 'is-danger',
+                        },
                     ],
                     method: self.methods.subtraction,
                     enabled: true,
-                    current: 0
+                    current: 0,
                 },
                 {
                     name: 'Multiplication',
@@ -139,32 +137,32 @@ export default {
                             name: 'Easy',
                             options: {
                                 low: 5,
-                                high: 35
+                                high: 35,
                             },
-                            style: 'is-success'
+                            style: 'is-success',
                         },
                         {
                             id: 'medium',
                             name: 'Medium',
                             options: {
                                 low: 8,
-                                high: 50
+                                high: 50,
                             },
-                            style: 'is-warning'
+                            style: 'is-warning',
                         },
                         {
                             id: 'hard',
                             name: 'Hard',
                             options: {
                                 low: 15,
-                                high: 95
+                                high: 95,
                             },
-                            style: 'is-danger'
-                        }
+                            style: 'is-danger',
+                        },
                     ],
                     method: self.methods.multiplication,
                     enabled: true,
-                    current: 0
+                    current: 0,
                 },
                 {
                     name: 'Division',
@@ -176,32 +174,32 @@ export default {
                             name: 'Easy',
                             options: {
                                 low: 5,
-                                high: 35
+                                high: 35,
                             },
-                            style: 'is-success'
+                            style: 'is-success',
                         },
                         {
                             id: 'medium',
                             name: 'Medium',
                             options: {
                                 low: 8,
-                                high: 50
+                                high: 50,
                             },
-                            style: 'is-warning'
+                            style: 'is-warning',
                         },
                         {
                             id: 'hard',
                             name: 'Hard',
                             options: {
                                 low: 15,
-                                high: 95
+                                high: 95,
                             },
-                            style: 'is-danger'
-                        }
+                            style: 'is-danger',
+                        },
                     ],
                     method: self.methods.division,
                     enabled: true,
-                    current: 0
+                    current: 0,
                 },
                 {
                     name: 'Square Root',
@@ -213,34 +211,34 @@ export default {
                             name: 'Easy',
                             options: {
                                 low: 4,
-                                high: 20
+                                high: 20,
                             },
-                            style: 'is-success'
+                            style: 'is-success',
                         },
                         {
                             id: 'medium',
                             name: 'Medium',
                             options: {
                                 low: 13,
-                                high: 30
+                                high: 30,
                             },
-                            style: 'is-warning'
+                            style: 'is-warning',
                         },
                         {
                             id: 'hard',
                             name: 'Hard',
                             options: {
                                 low: 19,
-                                high: 60
+                                high: 60,
                             },
-                            style: 'is-danger'
-                        }
+                            style: 'is-danger',
+                        },
                     ],
                     method: self.methods.square_root,
                     enabled: true,
-                    current: 0
-                }
-            ]
-        }
-    }
-}
+                    current: 0,
+                },
+            ],
+        };
+    },
+};
