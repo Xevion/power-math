@@ -1,31 +1,23 @@
-import Vue from 'vue';
-import VueKatex from 'vue-katex';
-import { ConfigProgrammatic, Input, Field, Button, Icon, Modal, Tooltip } from 'buefy';
+import { createApp } from 'vue';
+import Oruga from '@oruga-ui/oruga-next';
+import { bulmaConfig } from '@oruga-ui/theme-bulma';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCog, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import App from './App.vue';
+import { katexDirective } from './katex';
 import 'katex/dist/katex.min.css';
-import './scss/buefy.scss';
-import 'animate.css/animate.min.css';
+import 'animate.css';
+import './scss/main.scss';
 
-Vue.config.productionTip = false;
 library.add(faCog, faTimes);
-Vue.component('vue-fontawesome', FontAwesomeIcon);
 
-Vue.use(Input);
-Vue.use(Field);
-Vue.use(Button);
-Vue.use(Icon);
-Vue.use(Modal);
-Vue.use(Tooltip);
-
-ConfigProgrammatic.setOptions({
-    defaultIconComponent: 'vue-fontawesome',
-    defaultIconPack: 'fas',
+const app = createApp(App);
+app.component('vue-fontawesome', FontAwesomeIcon);
+app.directive('katex', katexDirective);
+app.use(Oruga, {
+    ...bulmaConfig,
+    iconComponent: 'vue-fontawesome',
+    iconPack: 'fas',
 });
-Vue.use(VueKatex);
-
-new Vue({
-    render: (h) => h(App),
-}).$mount('#app');
+app.mount('#app');

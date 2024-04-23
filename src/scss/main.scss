@@ -1,3 +1,66 @@
+@charset "utf-8";
+
+// Import Bulma's core utilities so the variables below can override defaults
+@import 'bulma/sass/utilities/_all';
+
+// Dark mode
+$background: hsl(0, 0%, 13%);
+$scheme-main: hsl(0, 0%, 6%);
+$scheme-invert: $white;
+$text: hsl(0, 0%, 91%);
+$text-strong: hsl(0, 0%, 97%);
+$modal-background-background-color: bulmaRgba($scheme-main, 0.6);
+$modal-card-body-background-color: darken($background, 4%);
+$border: darken($modal-background-background-color, 30%);
+
+$grey-darker: hsl(0, 0%, 58%);
+$grey-dark: hsl(0, 0%, 53%);
+$grey: hsl(0, 0%, 42%);
+$grey-light: hsl(0, 0%, 32%);
+$grey-lightest: hsl(0, 0%, 22%);
+
+$button-border-width: 0;
+$button-hover-color: $grey-darker;
+$button-background-color: lighten($scheme-main, 0.5%);
+
+@import 'bulma/bulma';
+
+// Oruga component styles on top of Bulma (tooltip positioning, modal, etc.)
+@import '@oruga-ui/theme-bulma/dist/scss/bulma';
+
+// Special button class that disables hover/active/focus effects
+.button {
+    &.button-unhoverable {
+        &:hover,
+        &:active,
+        &:focus,
+        &.is-hovered,
+        &.is-active,
+        &.is-focused {
+            border-color: $button-border-color !important;
+            color: $text-strong !important;
+        }
+    }
+
+    // Drop the focus box-shadow on buttons that are not being pressed
+    &:not(:active) {
+        &:focus,
+        &.is-focused {
+            box-shadow: none !important;
+        }
+    }
+
+    &.darker {
+        background-color: darken($scheme-main, 3%);
+    }
+}
+
+.field.has-addons {
+    .button {
+        z-index: auto !important;
+    }
+}
+
 // Ensure the app area always expands to 100% of the screen
 html,
 body,
@@ -16,9 +79,14 @@ html {
     }
 }
 
-// Make toast notifications smaller
-.notices .toast {
-    padding: 0.6em 1.35em !important;
+// Settings cog: enlarge the icon box (otherwise the bigger svg overflows the
+// default 1.5rem .icon box) and keep it clear of the viewport corner
+.settings-cog.icon {
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+    margin-top: 0.75rem;
+    margin-right: 1.25rem;
 }
 
 // Width utility classes

@@ -2,25 +2,21 @@
     <div id="app">
         <div class="columns is-justify-content-flex-end pt-2">
             <div class="column is-1 mr-2">
-                <b-icon
-                    @click.native="isSettingsMenuActive = true"
-                    class="is-clickable is-pulled-right"
+                <o-icon
+                    @click="isSettingsMenuActive = true"
+                    class="is-clickable is-pulled-right settings-cog"
                     pack="fas"
                     icon="cog"
-                    custom-size="3x"
-                ></b-icon>
-                <b-modal
-                    v-model="isSettingsMenuActive"
-                    has-modal-card
+                />
+                <o-modal
+                    v-model:active="isSettingsMenuActive"
                     trap-focus
                     :destroy-on-hide="false"
                     aria-role="dialog"
                     aria-modal
                 >
-                    <template #default="props">
-                        <SettingsMenu :problems="problems" @close="props.close"></SettingsMenu>
-                    </template>
-                </b-modal>
+                    <SettingsMenu :problems="problems" @close="isSettingsMenuActive = false" />
+                </o-modal>
             </div>
         </div>
         <div
@@ -32,22 +28,22 @@
         <div class="container">
             <div class="columns is-centered">
                 <div class="column is-three-fifths">
-                    <b-field id="input" @keyup.native.enter="checkAnswer()">
-                        <b-input :custom-class="inputClass" v-model="answer"></b-input>
-                    </b-field>
+                    <o-field id="input">
+                        <o-input
+                            v-model="answer"
+                            :class="inputClass"
+                            @keyup.enter="checkAnswer()"
+                        />
+                    </o-field>
                 </div>
             </div>
         </div>
     </div>
 </template>
 
-<style lang="scss">
-    @import './src/scss/main.scss';
-</style>
-
 <script>
     import problems from '@/problems';
-    import SettingsMenu from '@/components/SettingsMenu';
+    import SettingsMenu from '@/components/SettingsMenu.vue';
 
     export default {
         name: 'App',
@@ -78,7 +74,7 @@
                 }
             });
         },
-        mounted: function () {
+        mounted() {
             this.$nextTick(() => {
                 this.nextQuestion();
             });
