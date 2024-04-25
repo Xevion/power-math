@@ -29,11 +29,7 @@
             <div class="columns is-centered">
                 <div class="column is-three-fifths">
                     <o-field id="input">
-                        <o-input
-                            v-model="answer"
-                            :class="inputClass"
-                            @keyup.enter="checkAnswer()"
-                        />
+                        <o-input v-model="answer" :class="inputClass" @keyup.enter="checkAnswer()" />
                     </o-field>
                 </div>
             </div>
@@ -41,102 +37,89 @@
     </div>
 </template>
 
-<script>
-    import problems from '@/problems';
+<script setup lang="ts">
+    import { computed, onMounted, onUnmounted, ref } from 'vue';
     import SettingsMenu from '@/components/SettingsMenu.vue';
+    import { useProblems } from '@/composables/useProblems';
+    import type { GeneratedProblem } from '@/types';
 
-    export default {
-        name: 'App',
-        mixins: [problems],
-        components: { SettingsMenu },
-        data() {
-            return {
-                answer: null,
-                currentQuestion: null,
-                inputClass: '',
-                allowInputSubmit: true,
-                currentAnimation: '',
-                chances: 3,
-                isSettingsMenuActive: false,
-            };
-        },
-        computed: {
-            expression() {
-                return this.currentQuestion != null ? this.currentQuestion.text : 'error';
-            },
-        },
-        created() {
-            window.addEventListener('keyup', (e) => {
-                if (e.key === 'ArrowUp') {
-                    this.nextQuestion();
-                } else if (e.key === 'ArrowRight') {
-                    this.checkAnswer(true);
-                }
-            });
-        },
-        mounted() {
-            this.$nextTick(() => {
-                this.nextQuestion();
-            });
-        },
-        methods: {
-            nextQuestion(fail = false) {
-                let problem = this.getProblem();
-                if (this.currentQuestion == null) this.currentQuestion = problem;
-                else {
-                    // Animate fade out
-                    if (fail) this.currentAnimation = 'animate__fadeOutRight';
-                    else this.currentAnimation = 'animate__fadeOutUp';
+    const { problems, getProblem } = useProblems();
 
-                    // Fade in down
-                    setTimeout(() => {
-                        this.currentQuestion = problem;
-                        this.currentAnimation = 'animate__fadeInDown';
-                        setTimeout(() => {
-                            this.currentAnimation = '';
-                        }, 500);
-                    }, 200);
-                }
-            },
-            checkAnswer(force = false) {
-                // Skip answer checking if answer submission currently locked
-                if (!this.allowInputSubmit && !force) return;
+    const answer = ref('');
+    const currentQuestion = ref<GeneratedProblem | null>(null);
+    const inputClass = ref('');
+    const allowInputSubmit = ref(true);
+    const currentAnimation = ref('');
+    const chances = ref(3);
+    const isSettingsMenuActive = ref(false);
 
-                // Check answer
-                let correct;
-                // Number parsing if the answer is a specific number
-                if (typeof this.currentQuestion.answer === 'number')
-                    correct = this.currentQuestion.answer === Number.parseInt(this.answer);
-                // String based answer (like a fraction)
-                else correct = this.currentQuestion.answer === this.answer;
+    const expression = computed(() => currentQuestion.value?.text ?? 'error');
 
-                if (correct || force) {
-                    // Correct answer animation, new question & reset answer box
-                    this.inputClass = 'correct';
-                    setTimeout(this.clearInputClass, 500);
-                    this.nextQuestion();
-                    this.answer = '';
-                } else {
-                    if (--this.chances === 0) {
-                        this.nextQuestion(true);
-                        this.chances = 3;
-                    }
+    function nextQuestion(fail = false) {
+        const problem = getProblem();
+        if (currentQuestion.value == null) {
+            currentQuestion.value = problem;
+            return;
+        }
 
-                    // Shake input
-                    this.inputClass = 'incorrect';
-                    setTimeout(this.clearInputClass, 500);
+        currentAnimation.value = fail ? 'animate__fadeOutRight' : 'animate__fadeOutUp';
+        setTimeout(() => {
+            currentQuestion.value = problem;
+            currentAnimation.value = 'animate__fadeInDown';
+            setTimeout(() => {
+                currentAnimation.value = '';
+            }, 500);
+        }, 200);
+    }
 
-                    // Lock submission
-                    this.allowInputSubmit = false;
-                    setTimeout(this.unlockInput, 500);
-                }
-            },
-            clearInputClass() {
-                this.inputClass = '';
-            },
-            unlockInput() {
-                this.allowInputSubmit = true;
-            },
-        },
-    };
+    function checkAnswer(force = false) {
+        // Skip answer checking if submission is currently locked
+        if (!allowInputSubmit.value && !force) return;
+
+        const question = currentQuestion.value;
+        const correct = question != null && question.answer === Number.parseInt(answer.value);
+
+        if (correct || force) {
+            inputClass.value = 'correct';
+            setTimeout(clearInputClass, 500);
+            nextQuestion();
+            answer.value = '';
+        } else {
+            if (--chances.value === 0) {
+                nextQuestion(true);
+                chances.value = 3;
+            }
+
+            // Shake the input, then briefly lock submission
+            inputClass.value = 'incorrect';
+            setTimeout(clearInputClass, 500);
+            allowInputSubmit.value = false;
+            setTimeout(unlockInput, 500);
+        }
+    }
+
+    function clearInputClass() {
+        inputClass.value = '';
+    }
+
+    function unlockInput() {
+        allowInputSubmit.value = true;
+    }
+
+    function onKeyup(e: KeyboardEvent) {
+        if (e.key === 'ArrowUp') {
+            nextQuestion();
+        } else if (e.key === 'ArrowRight') {
+            checkAnswer(true);
+        }
+    }
+
+    onMounted(() => {
+        window.addEventListener('keyup', onKeyup);
+        nextQuestion();
+    });
+
+    onUnmounted(() => {
+        window.removeEventListener('keyup', onKeyup);
+    });
 </script>

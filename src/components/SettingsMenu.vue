@@ -2,7 +2,7 @@
     <div class="modal-card">
         <header class="modal-card-head">
             <p class="modal-card-title">Settings</p>
-            <o-icon @click="$emit('close')" class="is-clickable" pack="fas" icon="times" />
+            <o-icon @click="emit('close')" class="is-clickable" pack="fas" icon="times" />
         </header>
         <section class="modal-card-body">
             <o-field
@@ -52,23 +52,23 @@
     </div>
 </template>
 
-<script>
-    export default {
-        name: 'SettingsMenu',
-        props: ['problems'],
-        emits: ['close'],
-        methods: {
-            selectProblemDifficulty(problemIndex, difficultyIndex) {
-                this.problems[problemIndex].enabled = true;
-                this.problems[problemIndex].current = difficultyIndex;
-            },
-            disableProblem(problemIndex) {
-                this.problems[problemIndex].enabled = false;
-            },
-            getExample(problemIndex, difficultyIndex) {
-                let problemType = this.problems[problemIndex];
-                return problemType.method(problemType.difficulties[difficultyIndex].options).text;
-            },
-        },
-    };
+<script setup lang="ts">
+    import type { ProblemType } from '@/types';
+
+    const props = defineProps<{ problems: ProblemType[] }>();
+    const emit = defineEmits<{ close: [] }>();
+
+    function selectProblemDifficulty(problemIndex: number, difficultyIndex: number) {
+        props.problems[problemIndex].enabled = true;
+        props.problems[problemIndex].current = difficultyIndex;
+    }
+
+    function disableProblem(problemIndex: number) {
+        props.problems[problemIndex].enabled = false;
+    }
+
+    function getExample(problemIndex: number, difficultyIndex: number): string {
+        const problemType = props.problems[problemIndex];
+        return problemType.method(problemType.difficulties[difficultyIndex].options).text;
+    }
 </script>
