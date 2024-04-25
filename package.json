@@ -6,9 +6,10 @@
     "packageManager": "pnpm@9.0.0",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "vue-tsc --noEmit && vite build",
         "preview": "vite preview",
-        "format": "prettier --write \"src/**/*.{js,vue,scss}\""
+        "type-check": "vue-tsc --noEmit",
+        "format": "prettier --write \"src/**/*.{ts,vue,scss}\""
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -22,10 +23,14 @@
         "vue": "^3.4.21"
     },
     "devDependencies": {
+        "@types/katex": "^0.16.7",
+        "@types/node": "^20.12.7",
         "@vitejs/plugin-vue": "^5.0.4",
         "prettier": "^3.2.5",
         "sass": "^1.75.0",
-        "vite": "^5.2.0"
+        "typescript": "^5.4.5",
+        "vite": "^5.2.0",
+        "vue-tsc": "^2.0.14"
     },
     "browserslist": [
         "> 1%",
