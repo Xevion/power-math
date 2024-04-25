@@ -9,6 +9,8 @@
         "build": "vue-tsc --noEmit && vite build",
         "preview": "vite preview",
         "type-check": "vue-tsc --noEmit",
+        "test": "vitest run",
+        "test:watch": "vitest",
         "format": "prettier --write \"src/**/*.{ts,vue,scss}\""
     },
     "dependencies": {
@@ -30,6 +32,7 @@
         "sass": "^1.75.0",
         "typescript": "^5.4.5",
         "vite": "^5.2.0",
+        "vitest": "^1.5.0",
         "vue-tsc": "^2.0.14"
     },
     "browserslist": [
