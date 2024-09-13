@@ -11,6 +11,7 @@
         "type-check": "vue-tsc --noEmit",
         "test": "vitest run",
         "test:watch": "vitest",
+        "deploy": "bash scripts/deploy.sh",
         "format": "prettier --write \"src/**/*.{ts,vue,scss}\""
     },
     "dependencies": {
