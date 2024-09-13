@@ -1,13 +1,21 @@
 <template>
     <div id="app">
         <div class="columns is-justify-content-flex-end pt-2">
-            <div class="column is-1 mr-2">
-                <o-icon
-                    @click="isSettingsMenuActive = true"
-                    class="is-clickable is-pulled-right settings-cog"
-                    pack="fas"
-                    icon="cog"
-                />
+            <div class="column is-narrow">
+                <div class="top-controls">
+                    <o-icon
+                        @click="toggleTheme()"
+                        class="is-clickable theme-toggle"
+                        pack="fas"
+                        :icon="theme === 'dark' ? 'moon' : 'sun'"
+                    />
+                    <o-icon
+                        @click="isSettingsMenuActive = true"
+                        class="is-clickable settings-cog"
+                        pack="fas"
+                        icon="cog"
+                    />
+                </div>
                 <o-modal
                     v-model:active="isSettingsMenuActive"
                     trap-focus
@@ -29,7 +37,11 @@
             <div class="columns is-centered">
                 <div class="column is-three-fifths">
                     <o-field id="input">
-                        <o-input v-model="answer" :class="inputClass" @keyup.enter="checkAnswer()" />
+                        <o-input
+                            v-model="answer"
+                            :class="inputClass"
+                            @keyup.enter="checkAnswer()"
+                        />
                     </o-field>
                 </div>
             </div>
@@ -41,9 +53,11 @@
     import { computed, onMounted, onUnmounted, ref } from 'vue';
     import SettingsMenu from '@/components/SettingsMenu.vue';
     import { useProblems } from '@/composables/useProblems';
+    import { useTheme } from '@/composables/useTheme';
     import type { GeneratedProblem } from '@/types';
 
     const { problems, getProblem } = useProblems();
+    const { theme, toggleTheme, initTheme } = useTheme();
 
     const answer = ref('');
     const currentQuestion = ref<GeneratedProblem | null>(null);
@@ -115,6 +129,7 @@
     }
 
     onMounted(() => {
+        initTheme();
         window.addEventListener('keyup', onKeyup);
         nextQuestion();
     });

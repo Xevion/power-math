@@ -1,0 +1,72 @@
+// Runtime theming layer. Bulma 0.9 has no native theming, so the themeable
+// surfaces are routed through CSS custom properties and flipped by the
+// data-theme attribute on <html>. Dark is the baseline (matches a no-JS load);
+// light overrides the tokens that need to change.
+:root {
+    --app-bg: hsl(0, 0%, 6%);
+    --surface: hsl(0, 0%, 9%);
+    --surface-head: hsl(0, 0%, 13%);
+    --text: hsl(0, 0%, 91%);
+    --text-strong: hsl(0, 0%, 97%);
+    --border: hsl(0, 0%, 20%);
+    --icon: hsl(0, 0%, 91%);
+    --expr-text: hsl(0, 0%, 91%);
+    --expr-shadow: hsl(0, 0%, 5%);
+    --input-text: hsl(0, 0%, 80%);
+    --button-bg: hsl(0, 0%, 9%);
+    --button-darker-bg: hsl(0, 0%, 3%);
+    --button-text: hsl(0, 0%, 91%);
+    --modal-overlay: hsla(0, 0%, 6%, 0.6);
+}
+
+html[data-theme='light'] {
+    --app-bg: hsl(0, 0%, 98%);
+    --surface: hsl(0, 0%, 100%);
+    --surface-head: hsl(0, 0%, 96%);
+    --text: hsl(0, 0%, 21%);
+    --text-strong: hsl(0, 0%, 13%);
+    --border: hsl(0, 0%, 80%);
+    --icon: hsl(0, 0%, 30%);
+    --expr-text: hsl(0, 0%, 21%);
+    --expr-shadow: hsl(0, 0%, 80%);
+    --input-text: hsl(0, 0%, 21%);
+    --button-bg: hsl(0, 0%, 100%);
+    --button-darker-bg: hsl(0, 0%, 93%);
+    --button-text: hsl(0, 0%, 21%);
+    --modal-overlay: hsla(0, 0%, 40%, 0.45);
+}
+
+// Override Bulma's baked-in chrome for the surfaces the app actually shows.
+// Difficulty buttons (.is-success/.is-warning/.is-danger) keep their semantic
+// colors via higher specificity, so the base .button rule is left unweighted.
+html,
+body,
+#app {
+    background-color: var(--app-bg);
+}
+
+.modal-card-head {
+    background-color: var(--surface-head);
+}
+
+.modal-card-title {
+    color: var(--text-strong);
+}
+
+.modal-card-body {
+    background-color: var(--surface);
+}
+
+.modal-background {
+    background-color: var(--modal-overlay);
+}
+
+.button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border-color: var(--border);
+
+    &.darker {
+        background-color: var(--button-darker-bg);
+    }
+}

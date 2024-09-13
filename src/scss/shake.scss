@@ -18,20 +18,20 @@
     }
     100% {
         transform: translate(0);
-        border-color: hsl(0, 0%, 20%);
+        border-color: var(--border);
     }
 }
 
 @keyframes green_flash {
     0% {
-        border-color: hsl(0, 0%, 20%);
+        border-color: var(--border);
         //border-color: rgba(#41df5b, 2.5%);
     }
     60% {
         border-color: rgba(#41df5b, 5%);
     }
     100% {
-        border-color: hsl(0, 0%, 20%);
+        border-color: var(--border);
     }
 }
 

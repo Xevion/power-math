@@ -38,7 +38,7 @@ $button-background-color: lighten($scheme-main, 0.5%);
         &.is-active,
         &.is-focused {
             border-color: $button-border-color !important;
-            color: $text-strong !important;
+            color: var(--text-strong) !important;
         }
     }
 
@@ -48,10 +48,6 @@ $button-background-color: lighten($scheme-main, 0.5%);
         &.is-focused {
             box-shadow: none !important;
         }
-    }
-
-    &.darker {
-        background-color: darken($scheme-main, 3%);
     }
 }
 
@@ -79,14 +75,30 @@ html {
     }
 }
 
-// Settings cog: enlarge the icon box (otherwise the bigger svg overflows the
-// default 1.5rem .icon box) and keep it clear of the viewport corner
+// Top-right controls (theme toggle + settings cog) laid out in a row and kept
+// clear of the viewport corner
+.top-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+    margin-right: 1.25rem;
+}
+
+// Enlarge the icon boxes (otherwise the bigger svg overflows the default
+// 1.5rem .icon box)
 .settings-cog.icon {
     width: 3rem;
     height: 3rem;
     font-size: 2rem;
-    margin-top: 0.75rem;
-    margin-right: 1.25rem;
+    color: var(--icon);
+}
+
+.theme-toggle.icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.6rem;
+    color: var(--icon);
 }
 
 // Width utility classes
@@ -105,3 +117,4 @@ html {
 
 @import './latex.scss';
 @import './shake.scss';
+@import './themes.scss';

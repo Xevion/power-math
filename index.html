@@ -29,6 +29,23 @@
             content="Practice random math problems in the browser, from simple arithmetic on up."
         />
         <meta name="twitter:image" content="https://xevion.github.io/power-math/og-image.png" />
+
+        <script>
+            // Resolve the theme before first paint so there is no flash of the
+            // wrong background. Kept in sync afterwards by useTheme.
+            (function () {
+                try {
+                    var stored = localStorage.getItem('power-math-theme');
+                    var theme =
+                        stored === 'light' || stored === 'dark'
+                            ? stored
+                            : window.matchMedia('(prefers-color-scheme: dark)').matches
+                              ? 'dark'
+                              : 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                } catch (e) {}
+            })();
+        </script>
     </head>
     <body>
         <noscript>
