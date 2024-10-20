@@ -29,4 +29,28 @@ describe('useProblems', () => {
         problems.forEach((problem) => (problem.enabled = false));
         expect(() => getProblem()).not.toThrow();
     });
+
+    it('only draws from enabled generators', () => {
+        const { problems, getProblem } = useProblems();
+        problems.forEach((problem) => (problem.enabled = problem.spec.id === 'square_root'));
+        for (let i = 0; i < 50; i++) {
+            expect(getProblem().text.startsWith('\\sqrt')).toBe(true);
+        }
+    });
+
+    it('weight biases the draw toward the heavier generator', () => {
+        const { problems, getProblem } = useProblems();
+        for (const problem of problems) {
+            problem.enabled = problem.spec.id === 'addition' || problem.spec.id === 'square_root';
+            problem.weight = problem.spec.id === 'addition' ? 5 : 1;
+        }
+
+        let roots = 0;
+        const draws = 600;
+        for (let i = 0; i < draws; i++) {
+            if (getProblem().text.startsWith('\\sqrt')) roots++;
+        }
+        // square root carries 1/6 of the weight, so it should stay the minority
+        expect(roots).toBeLessThan(draws - roots);
+    });
 });
