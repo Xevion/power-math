@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
-    addition,
-    division,
+    additionSpec,
+    divisionSpec,
     getRandomInt,
-    multiplication,
-    squareRoot,
-    subtraction,
+    multiplicationSpec,
+    squareRootSpec,
+    subtractionSpec,
 } from './useArithmetic';
 
-const opts = { low: 5, high: 50 };
+const config = { low: 5, high: 50 };
 
 describe('getRandomInt', () => {
     it('stays within [min, max) and returns integers', () => {
@@ -24,7 +24,7 @@ describe('getRandomInt', () => {
 describe('arithmetic generators', () => {
     it('addition: answer is the sum shown in the text', () => {
         for (let i = 0; i < 200; i++) {
-            const { text, answer } = addition(opts);
+            const { text, answer } = additionSpec.generate(config);
             const [a, b] = text.split(' + ').map(Number);
             expect(answer).toBe(a + b);
         }
@@ -32,7 +32,7 @@ describe('arithmetic generators', () => {
 
     it('subtraction: answer matches the rendered expression', () => {
         for (let i = 0; i < 200; i++) {
-            const { text, answer } = subtraction(opts);
+            const { text, answer } = subtractionSpec.generate(config);
             if (text.includes(' - ')) {
                 const [a, b] = text.split(' - ').map(Number);
                 expect(answer).toBe(a - b);
@@ -45,7 +45,7 @@ describe('arithmetic generators', () => {
 
     it('multiplication: answer is the product', () => {
         for (let i = 0; i < 200; i++) {
-            const { text, answer } = multiplication(opts);
+            const { text, answer } = multiplicationSpec.generate(config);
             const [a, b] = text.split(' \\times ').map(Number);
             expect(answer).toBe(a * b);
         }
@@ -53,7 +53,7 @@ describe('arithmetic generators', () => {
 
     it('division: result is an exact integer quotient', () => {
         for (let i = 0; i < 200; i++) {
-            const { text, answer } = division(opts);
+            const { text, answer } = divisionSpec.generate(config);
             const [dividend, divisor] = text.split(' \\div ').map(Number);
             expect(dividend / divisor).toBe(answer);
             expect(Number.isInteger(answer)).toBe(true);
@@ -62,7 +62,7 @@ describe('arithmetic generators', () => {
 
     it('square root: answer squared is the radicand', () => {
         for (let i = 0; i < 200; i++) {
-            const { text, answer } = squareRoot(opts);
+            const { text, answer } = squareRootSpec.generate(config);
             const radicand = Number(text.replace('\\sqrt{', '').replace('}', ''));
             expect(answer * answer).toBe(radicand);
         }
