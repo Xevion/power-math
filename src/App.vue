@@ -54,6 +54,7 @@
     import SettingsMenu from '@/components/SettingsMenu.vue';
     import { useProblems } from '@/composables/useProblems';
     import { useTheme } from '@/composables/useTheme';
+    import { parseAnswer } from '@/answer';
     import type { GeneratedProblem } from '@/types';
 
     const { problems, getProblem } = useProblems();
@@ -67,7 +68,7 @@
     const chances = ref(3);
     const isSettingsMenuActive = ref(false);
 
-    const expression = computed(() => currentQuestion.value?.text ?? 'error');
+    const expression = computed(() => currentQuestion.value?.text ?? '');
 
     function nextQuestion(fail = false) {
         const problem = getProblem();
@@ -91,7 +92,8 @@
         if (!allowInputSubmit.value && !force) return;
 
         const question = currentQuestion.value;
-        const correct = question != null && question.answer === Number.parseInt(answer.value);
+        const parsed = parseAnswer(answer.value);
+        const correct = question != null && parsed != null && question.answer === parsed;
 
         if (correct || force) {
             inputClass.value = 'correct';
