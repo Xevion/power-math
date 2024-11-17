@@ -2,7 +2,9 @@
     <div class="modal-card">
         <header class="modal-card-head">
             <p class="modal-card-title">Settings</p>
-            <o-icon @click="emit('close')" class="is-clickable" pack="fas" icon="times" />
+            <button class="icon-btn" @click="emit('close')" aria-label="Close">
+                <X :size="22" />
+            </button>
         </header>
         <section class="modal-card-body">
             <div class="generator" v-for="state in problems" :key="state.spec.id">
@@ -73,6 +75,7 @@
 </template>
 
 <script setup lang="ts">
+    import { X } from 'lucide-vue-next';
     import { valuesForDifficulty } from '@/types';
     import type { GeneratorState } from '@/types';
 

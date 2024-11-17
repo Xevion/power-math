@@ -3,18 +3,22 @@
         <div class="columns is-justify-content-flex-end pt-2">
             <div class="column is-narrow">
                 <div class="top-controls">
-                    <o-icon
+                    <button
+                        class="icon-btn"
                         @click="toggleTheme()"
-                        class="is-clickable theme-toggle"
-                        pack="fas"
-                        :icon="theme === 'dark' ? 'moon' : 'sun'"
-                    />
-                    <o-icon
+                        :aria-label="
+                            theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+                        "
+                    >
+                        <component :is="theme === 'dark' ? Moon : Sun" :size="22" />
+                    </button>
+                    <button
+                        class="icon-btn"
                         @click="isSettingsMenuActive = true"
-                        class="is-clickable settings-cog"
-                        pack="fas"
-                        icon="cog"
-                    />
+                        aria-label="Settings"
+                    >
+                        <Settings :size="26" />
+                    </button>
                 </div>
                 <o-modal
                     v-model:active="isSettingsMenuActive"
@@ -52,6 +56,7 @@
 <script setup lang="ts">
     import { computed, onMounted, onUnmounted, ref } from 'vue';
     import SettingsMenu from '@/components/SettingsMenu.vue';
+    import { Moon, Settings, Sun } from 'lucide-vue-next';
     import { useProblems } from '@/composables/useProblems';
     import { useTheme } from '@/composables/useTheme';
     import { parseAnswer } from '@/answer';

@@ -75,8 +75,8 @@ html {
     }
 }
 
-// Top-right controls (theme toggle + settings cog) laid out in a row and kept
-// clear of the viewport corner
+// Top-right controls (theme toggle + settings) laid out in a row and kept clear
+// of the viewport corner
 .top-controls {
     display: flex;
     align-items: center;
@@ -85,20 +85,22 @@ html {
     margin-right: 1.25rem;
 }
 
-// Enlarge the icon boxes (otherwise the bigger svg overflows the default
-// 1.5rem .icon box)
-.settings-cog.icon {
-    width: 3rem;
-    height: 3rem;
-    font-size: 2rem;
+// Bare icon button used for the chrome controls (theme, settings, close)
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem;
+    background: transparent;
+    border: 0;
     color: var(--icon);
-}
+    cursor: pointer;
+    line-height: 0;
+    transition: opacity 0.15s ease;
 
-.theme-toggle.icon {
-    width: 2.75rem;
-    height: 2.75rem;
-    font-size: 1.6rem;
-    color: var(--icon);
+    &:hover {
+        opacity: 0.7;
+    }
 }
 
 // Width utility classes
