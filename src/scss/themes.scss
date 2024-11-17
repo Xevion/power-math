@@ -17,6 +17,7 @@
     --button-darker-bg: hsl(0, 0%, 3%);
     --button-text: hsl(0, 0%, 91%);
     --modal-overlay: hsla(0, 0%, 6%, 0.6);
+    --hairline: hsl(0, 0%, 22%);
 }
 
 html[data-theme='light'] {
@@ -34,6 +35,7 @@ html[data-theme='light'] {
     --button-darker-bg: hsl(0, 0%, 93%);
     --button-text: hsl(0, 0%, 21%);
     --modal-overlay: hsla(0, 0%, 40%, 0.45);
+    --hairline: hsl(0, 0%, 86%);
 }
 
 // Override Bulma's baked-in chrome for the surfaces the app actually shows.
@@ -43,22 +45,6 @@ html,
 body,
 #app {
     background-color: var(--app-bg);
-}
-
-.modal-card-head {
-    background-color: var(--surface-head);
-}
-
-.modal-card-title {
-    color: var(--text-strong);
-}
-
-.modal-card-body {
-    background-color: var(--surface);
-}
-
-.modal-background {
-    background-color: var(--modal-overlay);
 }
 
 .button {

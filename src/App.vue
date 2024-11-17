@@ -46,15 +46,17 @@
             </button>
         </footer>
 
-        <o-modal
-            v-model:active="isSettingsMenuActive"
-            trap-focus
-            :destroy-on-hide="false"
-            aria-role="dialog"
-            aria-modal
-        >
-            <SettingsMenu :problems="problems" @close="isSettingsMenuActive = false" />
-        </o-modal>
+        <Teleport to="body">
+            <Transition name="sheet">
+                <div
+                    v-if="isSettingsMenuActive"
+                    class="sheet-overlay"
+                    @click.self="isSettingsMenuActive = false"
+                >
+                    <SettingsMenu :problems="problems" @close="isSettingsMenuActive = false" />
+                </div>
+            </Transition>
+        </Teleport>
     </div>
 </template>
 
@@ -162,6 +164,12 @@
     }
 
     function onKeyup(e: KeyboardEvent) {
+        // While the settings sheet is open, only listen for Escape to close it
+        if (isSettingsMenuActive.value) {
+            if (e.key === 'Escape') isSettingsMenuActive.value = false;
+            return;
+        }
+
         if (e.key === 'ArrowUp') {
             nextQuestion();
         } else if (e.key === 'ArrowRight') {

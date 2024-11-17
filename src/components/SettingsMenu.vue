@@ -1,12 +1,23 @@
 <template>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">Settings</p>
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="Settings" :style="sheetStyle">
+        <div
+            class="sheet-grip"
+            @pointerdown="onGripDown"
+            @pointermove="onGripMove"
+            @pointerup="onGripUp"
+            @pointercancel="onGripUp"
+        >
+            <span class="sheet-handle"></span>
+        </div>
+
+        <header class="sheet-head">
+            <h2 class="sheet-title">Settings</h2>
             <button class="icon-btn" @click="emit('close')" aria-label="Close">
-                <X :size="22" />
+                <X :size="20" />
             </button>
         </header>
-        <section class="modal-card-body">
+
+        <section class="sheet-body">
             <div class="generator" v-for="state in problems" :key="state.spec.id">
                 <div class="generator-head">
                     <div>
@@ -75,6 +86,7 @@
 </template>
 
 <script setup lang="ts">
+    import { computed, ref } from 'vue';
     import { X } from 'lucide-vue-next';
     import { valuesForDifficulty } from '@/types';
     import type { GeneratorState } from '@/types';
@@ -102,6 +114,42 @@
 
     function setValue(state: GeneratorState, key: string, value: number | boolean) {
         state.values[key] = value;
+    }
+
+    // Drag-to-dismiss: the grip follows the pointer down; releasing past the
+    // threshold slides the sheet the rest of the way out and then closes, while
+    // a short drag snaps back up.
+    const CLOSE_THRESHOLD = 110;
+    const dragOffset = ref(0);
+    const dragging = ref(false);
+    const closing = ref(false);
+    let startY = 0;
+
+    const sheetStyle = computed(() => {
+        if (closing.value) return { transform: 'translateY(100%)' };
+        if (dragging.value)
+            return { transform: `translateY(${dragOffset.value}px)`, transition: 'none' };
+        return {};
+    });
+
+    function onGripDown(e: PointerEvent) {
+        (e.target as HTMLElement).setPointerCapture(e.pointerId);
+        dragging.value = true;
+        dragOffset.value = 0;
+        startY = e.clientY;
+    }
+    function onGripMove(e: PointerEvent) {
+        if (dragging.value) dragOffset.value = Math.max(0, e.clientY - startY);
+    }
+    function onGripUp() {
+        if (!dragging.value) return;
+        dragging.value = false;
+        if (dragOffset.value > CLOSE_THRESHOLD) {
+            closing.value = true;
+            window.setTimeout(() => emit('close'), 280);
+        } else {
+            dragOffset.value = 0;
+        }
     }
 </script>
 
