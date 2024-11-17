@@ -18,67 +18,60 @@
         </header>
 
         <section class="sheet-body">
-            <div class="generator" v-for="state in problems" :key="state.spec.id">
-                <div class="generator-head">
-                    <div>
-                        <span class="generator-name">{{ state.spec.name }}</span>
-                        <span class="generator-desc">{{ state.spec.description }}</span>
+            <div
+                class="gen-card"
+                :class="{ 'is-off': !state.enabled }"
+                v-for="state in problems"
+                :key="state.spec.id"
+            >
+                <div class="gen-head">
+                    <div class="gen-meta">
+                        <span class="gen-name">{{ state.spec.name }}</span>
+                        <span class="gen-desc">{{ state.spec.description }}</span>
                     </div>
-                    <o-switch v-model="state.enabled" />
+                    <AppToggle v-model="state.enabled" />
                 </div>
 
-                <div class="buttons difficulty-row">
-                    <o-tooltip
-                        v-for="difficulty in state.spec.difficulties"
-                        :key="difficulty.id"
-                        variant="dark"
-                    >
-                        <o-button
-                            :class="
-                                state.enabled && state.difficultyId === difficulty.id
-                                    ? difficulty.style || 'is-info'
-                                    : ''
-                            "
-                            @click="selectDifficulty(state, difficulty.id)"
-                        >
-                            {{ difficulty.name }}
-                        </o-button>
-                        <template #content>
-                            <span v-katex="example(state, difficulty.id)"></span>
+                <div class="gen-controls" v-show="state.enabled">
+                    <AppSegmented
+                        :model-value="state.difficultyId"
+                        :options="difficultyOptions(state)"
+                        @update:model-value="(id: string) => selectDifficulty(state, id)"
+                    />
+
+                    <div class="generator-tune">
+                        <o-field label="Frequency" class="tune-field">
+                            <o-slider v-model="state.weight" :min="1" :max="5" :step="1" tooltip />
+                        </o-field>
+                        <template v-for="field in state.spec.fields" :key="field.key">
+                            <o-field
+                                v-if="field.kind === 'number'"
+                                :label="field.label"
+                                class="tune-field"
+                            >
+                                <o-input
+                                    number
+                                    :min="field.min"
+                                    :max="field.max"
+                                    :step="field.step ?? 1"
+                                    :model-value="readNumber(state, field.key)"
+                                    @update:model-value="
+                                        (value: unknown) =>
+                                            setValue(state, field.key, Number(value))
+                                    "
+                                />
+                            </o-field>
+                            <o-field v-else :label="field.label" class="tune-field">
+                                <o-switch
+                                    :model-value="readBoolean(state, field.key)"
+                                    @update:model-value="
+                                        (value: unknown) =>
+                                            setValue(state, field.key, value === true)
+                                    "
+                                />
+                            </o-field>
                         </template>
-                    </o-tooltip>
-                </div>
-
-                <div class="generator-tune" v-show="state.enabled">
-                    <o-field label="Frequency" class="tune-field">
-                        <o-slider v-model="state.weight" :min="1" :max="5" :step="1" tooltip />
-                    </o-field>
-                    <template v-for="field in state.spec.fields" :key="field.key">
-                        <o-field
-                            v-if="field.kind === 'number'"
-                            :label="field.label"
-                            class="tune-field"
-                        >
-                            <o-input
-                                number
-                                :min="field.min"
-                                :max="field.max"
-                                :step="field.step ?? 1"
-                                :model-value="readNumber(state, field.key)"
-                                @update:model-value="
-                                    (value: unknown) => setValue(state, field.key, Number(value))
-                                "
-                            />
-                        </o-field>
-                        <o-field v-else :label="field.label" class="tune-field">
-                            <o-switch
-                                :model-value="readBoolean(state, field.key)"
-                                @update:model-value="
-                                    (value: unknown) => setValue(state, field.key, value === true)
-                                "
-                            />
-                        </o-field>
-                    </template>
+                    </div>
                 </div>
             </div>
         </section>
@@ -88,20 +81,25 @@
 <script setup lang="ts">
     import { computed, ref } from 'vue';
     import { X } from 'lucide-vue-next';
+    import AppToggle from '@/components/controls/AppToggle.vue';
+    import AppSegmented from '@/components/controls/AppSegmented.vue';
     import { valuesForDifficulty } from '@/types';
     import type { GeneratorState } from '@/types';
 
     defineProps<{ problems: GeneratorState[] }>();
     const emit = defineEmits<{ close: [] }>();
 
+    function difficultyOptions(state: GeneratorState) {
+        return state.spec.difficulties.map((difficulty) => ({
+            value: difficulty.id,
+            label: difficulty.name,
+        }));
+    }
+
     function selectDifficulty(state: GeneratorState, difficultyId: string) {
         state.enabled = true;
         state.difficultyId = difficultyId;
         state.values = valuesForDifficulty(state.spec, difficultyId);
-    }
-
-    function example(state: GeneratorState, difficultyId: string): string {
-        return state.spec.generate(valuesForDifficulty(state.spec, difficultyId)).text;
     }
 
     function readNumber(state: GeneratorState, key: string): number {
@@ -154,36 +152,11 @@
 </script>
 
 <style scoped lang="scss">
-    .generator {
-        padding: 0.85rem 0;
-
-        & + .generator {
-            border-top: 1px solid var(--border);
-        }
-    }
-
-    .generator-head {
+    .gen-controls {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .generator-name {
-        font-weight: 600;
-        margin-right: 0.5rem;
-    }
-
-    .generator-desc {
-        color: var(--text);
-        opacity: 0.7;
-        font-size: 0.85rem;
-    }
-
-    .difficulty-row {
-        gap: 0.4rem;
-        margin-bottom: 0.5rem;
+        flex-direction: column;
+        gap: 0.85rem;
+        margin-top: 0.85rem;
     }
 
     .generator-tune {

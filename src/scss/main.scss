@@ -285,6 +285,131 @@ html {
     }
 }
 
+// One generator's card
+.gen-card {
+    background: var(--card-bg);
+    border: 1px solid var(--hairline);
+    border-radius: 0.7rem;
+    padding: 0.9rem 1rem;
+    transition: opacity 0.18s ease;
+
+    & + .gen-card {
+        margin-top: 0.65rem;
+    }
+
+    &.is-off {
+        opacity: 0.62;
+    }
+}
+
+.gen-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9rem;
+}
+
+.gen-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+    min-width: 0;
+}
+
+.gen-name {
+    font-weight: 620;
+    color: var(--text-strong);
+}
+
+.gen-desc {
+    font-size: 0.78rem;
+    line-height: 1.25;
+    color: var(--text);
+    opacity: 0.6;
+}
+
+// Pill toggle (generator enable + boolean fields)
+.ui-toggle {
+    justify-self: start;
+    position: relative;
+    flex: 0 0 auto;
+    width: 2.6rem;
+    height: 1.5rem;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: var(--control-bg);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.18s ease;
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    &.is-on {
+        background: var(--accent);
+    }
+}
+
+.ui-toggle-knob {
+    position: absolute;
+    top: 0.18rem;
+    left: 0.18rem;
+    width: 1.14rem;
+    height: 1.14rem;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    transition: transform 0.18s cubic-bezier(0.32, 0.72, 0, 1);
+
+    .ui-toggle.is-on & {
+        transform: translateX(1.1rem);
+    }
+}
+
+// Segmented button group (difficulty presets)
+.ui-segmented {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.2rem;
+    background: var(--track);
+    border-radius: 0.55rem;
+}
+
+.ui-seg {
+    flex: 1 1 0;
+    padding: 0.4rem 0.3rem;
+    border: 0;
+    border-radius: 0.4rem;
+    background: transparent;
+    color: var(--control-text);
+    font-size: 0.85rem;
+    font-weight: 550;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+
+    &:hover {
+        background: var(--control-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: -2px;
+    }
+
+    &.is-active,
+    &.is-active:hover {
+        background: var(--accent);
+        color: var(--accent-text);
+    }
+}
+
 // Overlay fades; the sheet itself slides via its own base transform transition
 .sheet-enter-active,
 .sheet-leave-active {

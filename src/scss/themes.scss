@@ -18,6 +18,15 @@
     --button-text: hsl(0, 0%, 91%);
     --modal-overlay: hsla(0, 0%, 6%, 0.6);
     --hairline: hsl(0, 0%, 22%);
+
+    // Settings controls (accent + flat control surfaces)
+    --accent: hsl(212, 92%, 56%);
+    --accent-text: hsl(0, 0%, 100%);
+    --control-bg: hsl(0, 0%, 17%);
+    --control-hover: hsl(0, 0%, 23%);
+    --control-text: hsl(0, 0%, 88%);
+    --track: hsl(0, 0%, 11%);
+    --card-bg: hsl(0, 0%, 12%);
 }
 
 html[data-theme='light'] {
@@ -36,6 +45,14 @@ html[data-theme='light'] {
     --button-text: hsl(0, 0%, 21%);
     --modal-overlay: hsla(0, 0%, 40%, 0.45);
     --hairline: hsl(0, 0%, 86%);
+
+    --accent: hsl(212, 88%, 48%);
+    --accent-text: hsl(0, 0%, 100%);
+    --control-bg: hsl(0, 0%, 92%);
+    --control-hover: hsl(0, 0%, 86%);
+    --control-text: hsl(0, 0%, 22%);
+    --track: hsl(0, 0%, 88%);
+    --card-bg: hsl(0, 0%, 97%);
 }
 
 // Override Bulma's baked-in chrome for the surfaces the app actually shows.
