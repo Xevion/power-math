@@ -1,62 +1,67 @@
 <template>
     <div id="app">
-        <div class="columns is-justify-content-flex-end pt-2">
-            <div class="column is-narrow">
-                <div class="top-controls">
-                    <button
-                        class="icon-btn"
-                        @click="toggleTheme()"
-                        :aria-label="
-                            theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
-                        "
-                    >
-                        <component :is="theme === 'dark' ? Moon : Sun" :size="22" />
-                    </button>
-                    <button
-                        class="icon-btn"
-                        @click="isSettingsMenuActive = true"
-                        aria-label="Settings"
-                    >
-                        <Settings :size="26" />
-                    </button>
-                </div>
-                <o-modal
-                    v-model:active="isSettingsMenuActive"
-                    trap-focus
-                    :destroy-on-hide="false"
-                    aria-role="dialog"
-                    aria-modal
-                >
-                    <SettingsMenu :problems="problems" @close="isSettingsMenuActive = false" />
-                </o-modal>
-            </div>
-        </div>
-        <div
-            id="expression"
-            class="animate__animated animate__faster"
-            :class="currentAnimation"
-            v-katex="expression"
-        ></div>
-        <div class="container">
-            <div class="columns is-centered">
-                <div class="column is-three-fifths">
-                    <o-field id="input">
-                        <o-input
-                            v-model="answer"
-                            :class="inputClass"
-                            @keyup.enter="checkAnswer()"
-                        />
-                    </o-field>
+        <header class="app-bar">
+            <span class="app-title">power-math</span>
+            <button
+                class="icon-btn"
+                @click="toggleTheme()"
+                :aria-label="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+            >
+                <component :is="theme === 'dark' ? Moon : Sun" :size="22" />
+            </button>
+        </header>
+
+        <main class="stage">
+            <div ref="stageEl" class="stage-problem">
+                <div class="expr-anim animate__animated animate__faster" :class="currentAnimation">
+                    <div
+                        ref="exprEl"
+                        class="expr"
+                        :style="{ transform: `scale(${exprScale})` }"
+                        v-katex="expression"
+                    ></div>
                 </div>
             </div>
-        </div>
+            <div class="stage-input">
+                <o-field id="input">
+                    <o-input v-model="answer" :class="inputClass" @keyup.enter="checkAnswer()" />
+                </o-field>
+            </div>
+        </main>
+
+        <footer class="action-bar">
+            <o-tooltip :label="triesLabel" variant="dark">
+                <div class="chances" aria-label="tries remaining">
+                    <span
+                        v-for="n in 3"
+                        :key="n"
+                        class="chance-dot"
+                        :class="{ 'is-used': n > chances, 'is-intro': introActive }"
+                        :style="introActive ? { animationDelay: `${(n - 1) * 0.12}s` } : undefined"
+                    ></span>
+                </div>
+            </o-tooltip>
+            <button class="icon-btn" @click="isSettingsMenuActive = true" aria-label="Settings">
+                <Settings :size="24" />
+            </button>
+        </footer>
+
+        <o-modal
+            v-model:active="isSettingsMenuActive"
+            trap-focus
+            :destroy-on-hide="false"
+            aria-role="dialog"
+            aria-modal
+        >
+            <SettingsMenu :problems="problems" @close="isSettingsMenuActive = false" />
+        </o-modal>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { computed, onMounted, onUnmounted, ref } from 'vue';
-    import SettingsMenu from '@/components/SettingsMenu.vue';
+    import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
     import { Moon, Settings, Sun } from 'lucide-vue-next';
+    import SettingsMenu from '@/components/SettingsMenu.vue';
     import { useProblems } from '@/composables/useProblems';
     import { useTheme } from '@/composables/useTheme';
     import { parseAnswer } from '@/answer';
@@ -72,8 +77,37 @@
     const currentAnimation = ref('');
     const chances = ref(3);
     const isSettingsMenuActive = ref(false);
+    const introActive = ref(false);
 
     const expression = computed(() => currentQuestion.value?.text ?? '');
+    const triesLabel = computed(
+        () => `${chances.value} ${chances.value === 1 ? 'try' : 'tries'} left`,
+    );
+
+    // Scale the rendered problem to fill the available width so long expressions
+    // never run off the edge of small screens
+    const stageEl = ref<HTMLElement | null>(null);
+    const exprEl = ref<HTMLElement | null>(null);
+    const exprScale = ref(1);
+
+    function fitExpression() {
+        const expr = exprEl.value;
+        const stage = stageEl.value;
+        if (!expr || !stage) return;
+
+        const naturalWidth = expr.scrollWidth;
+        const naturalHeight = expr.scrollHeight;
+        if (naturalWidth === 0 || naturalHeight === 0) return;
+
+        // Shrink to fit whichever axis is tighter; never scale up past the base
+        // size, so the expression can't grow tall enough to clip top/bottom
+        const widthScale = (stage.clientWidth * 0.94) / naturalWidth;
+        const heightScale = (stage.clientHeight * 0.9) / naturalHeight;
+        exprScale.value = Math.min(1, widthScale, heightScale);
+    }
+
+    // Refit after the katex re-renders for a new problem
+    watch(expression, fitExpression, { flush: 'post' });
 
     function nextQuestion(fail = false) {
         const problem = getProblem();
@@ -135,13 +169,26 @@
         }
     }
 
+    let resizeObserver: ResizeObserver | null = null;
+
     onMounted(() => {
         initTheme();
         window.addEventListener('keyup', onKeyup);
         nextQuestion();
+
+        // Briefly draw the eye to the tries indicator when play begins
+        introActive.value = true;
+        setTimeout(() => (introActive.value = false), 1200);
+
+        resizeObserver = new ResizeObserver(fitExpression);
+        if (stageEl.value) resizeObserver.observe(stageEl.value);
+        fitExpression();
+        // Refit once the math fonts have loaded and widths settle
+        document.fonts?.ready.then(fitExpression);
     });
 
     onUnmounted(() => {
         window.removeEventListener('keyup', onKeyup);
+        resizeObserver?.disconnect();
     });
 </script>
