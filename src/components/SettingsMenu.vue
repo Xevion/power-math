@@ -32,36 +32,38 @@
                     <AppToggle v-model="state.enabled" />
                 </div>
 
-                <div class="gen-body" v-show="state.enabled">
-                    <span class="gen-label">Difficulty</span>
-                    <AppSegmented
-                        :model-value="state.difficultyId"
-                        :options="difficultyOptions(state)"
-                        @update:model-value="(id: string) => selectDifficulty(state, id)"
-                    />
-
-                    <span class="gen-label">Frequency</span>
-                    <AppSlider v-model="state.weight" :min="1" :max="5" />
-
-                    <template v-for="field in state.spec.fields" :key="field.key">
-                        <span class="gen-label">{{ field.label }}</span>
-                        <AppScrub
-                            v-if="field.kind === 'number'"
-                            :model-value="readNumber(state, field.key)"
-                            :min="field.min"
-                            :max="field.max"
-                            :step="field.step ?? 1"
-                            @update:model-value="(v: number) => setValue(state, field.key, v)"
+                <div class="gen-collapse" :class="{ 'is-open': state.enabled }">
+                    <div class="gen-body">
+                        <span class="gen-label">Difficulty</span>
+                        <AppSegmented
+                            :model-value="state.difficultyId"
+                            :options="difficultyOptions(state)"
+                            @update:model-value="(id: string) => selectDifficulty(state, id)"
                         />
-                        <AppToggle
-                            v-else
-                            :model-value="readBoolean(state, field.key)"
-                            @update:model-value="(v: boolean) => setValue(state, field.key, v)"
-                        />
-                    </template>
 
-                    <span class="gen-label">Preview</span>
-                    <GenPreview :state="state" />
+                        <span class="gen-label">Frequency</span>
+                        <AppSlider v-model="state.weight" :min="1" :max="5" />
+
+                        <template v-for="field in state.spec.fields" :key="field.key">
+                            <span class="gen-label">{{ field.label }}</span>
+                            <AppScrub
+                                v-if="field.kind === 'number'"
+                                :model-value="readNumber(state, field.key)"
+                                :min="field.min"
+                                :max="field.max"
+                                :step="field.step ?? 1"
+                                @update:model-value="(v: number) => setValue(state, field.key, v)"
+                            />
+                            <AppToggle
+                                v-else
+                                :model-value="readBoolean(state, field.key)"
+                                @update:model-value="(v: boolean) => setValue(state, field.key, v)"
+                            />
+                        </template>
+
+                        <span class="gen-label">Preview</span>
+                        <GenPreview :state="state" />
+                    </div>
                 </div>
             </div>
         </section>
@@ -107,7 +109,7 @@
 
     // Drag-to-dismiss: the grip follows the pointer down; releasing past the
     // threshold slides the sheet the rest of the way out and then closes, while
-    // a short drag snaps back up.
+    // a short drag snaps back up. Pulling up is pinned at the resting position.
     const CLOSE_THRESHOLD = 110;
     const dragOffset = ref(0);
     const dragging = ref(false);

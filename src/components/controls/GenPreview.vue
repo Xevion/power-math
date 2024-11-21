@@ -1,17 +1,47 @@
 <template>
-    <span class="gen-preview-eq" v-katex="latex"></span>
+    <span
+        class="gen-preview-eq"
+        :class="{ 'is-pending': pending }"
+        title="Click to reroll"
+        @click="reroll"
+        v-katex="latex"
+    ></span>
 </template>
 
 <script setup lang="ts">
-    import { computed } from 'vue';
+    import { onUnmounted, ref, watch } from 'vue';
     import type { GeneratorState } from '@/types';
 
     const props = defineProps<{ state: GeneratorState }>();
 
-    // Reads every value so the computed re-rolls a fresh sample only when this
-    // generator's config actually changes, not on every unrelated sheet render
-    const latex = computed(() => {
-        void Object.values(props.state.values);
-        return props.state.spec.generate(props.state.values).text;
+    const latex = ref(props.state.spec.generate(props.state.values).text);
+    const pending = ref(false);
+    let timer: number | undefined;
+
+    function roll() {
+        latex.value = props.state.spec.generate(props.state.values).text;
+        pending.value = false;
+    }
+
+    // Fade out, then roll a fresh sample after the delay (and fade back in)
+    function scheduleRoll(delay: number) {
+        pending.value = true;
+        if (timer) window.clearTimeout(timer);
+        timer = window.setTimeout(roll, delay);
+    }
+
+    // Clicking the sample rerolls now, with the same fade but snappier
+    function reroll() {
+        scheduleRoll(120);
+    }
+
+    // A change to any tunable (or the difficulty) fades the sample out; once the
+    // edits settle for a beat we roll a fresh sample and fade it back in
+    const signature = () => JSON.stringify(props.state.values) + '|' + props.state.difficultyId;
+
+    watch(signature, () => scheduleRoll(180));
+
+    onUnmounted(() => {
+        if (timer) window.clearTimeout(timer);
     });
 </script>
