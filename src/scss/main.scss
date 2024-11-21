@@ -347,6 +347,15 @@ html {
     white-space: nowrap;
 }
 
+.gen-preview-eq {
+    justify-self: start;
+    color: var(--expr-text);
+
+    .katex {
+        font-size: 1.15rem;
+    }
+}
+
 // Pill toggle (generator enable + boolean fields)
 .ui-toggle {
     justify-self: start;

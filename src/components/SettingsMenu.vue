@@ -59,6 +59,9 @@
                             @update:model-value="(v: boolean) => setValue(state, field.key, v)"
                         />
                     </template>
+
+                    <span class="gen-label">Preview</span>
+                    <GenPreview :state="state" />
                 </div>
             </div>
         </section>
@@ -72,6 +75,7 @@
     import AppSegmented from '@/components/controls/AppSegmented.vue';
     import AppSlider from '@/components/controls/AppSlider.vue';
     import AppScrub from '@/components/controls/AppScrub.vue';
+    import GenPreview from '@/components/controls/GenPreview.vue';
     import { valuesForDifficulty } from '@/types';
     import type { GeneratorState } from '@/types';
 
