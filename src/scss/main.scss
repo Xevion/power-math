@@ -450,23 +450,38 @@ html {
     user-select: none;
 }
 
+// Full-width accent layer revealed left-to-right via clip-path
 .ui-slider-fill {
     position: absolute;
-    inset: 0 auto 0 0;
+    inset: 0;
     background: var(--accent);
-    opacity: 0.55;
+    clip-path: inset(0 calc(100% - var(--fill)) 0 0);
+    pointer-events: none;
+    // Eases toward the new value instead of snapping on each step
+    transition: clip-path 0.12s ease;
 }
 
-.ui-slider-value {
+// The value rides the wider region (track or fill) so it never sits across the
+// fill's edge; it slides and recolours as the fill passes underneath it
+.ui-slider-num {
     position: absolute;
-    inset: 0;
+    top: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
+    transform: translateX(-50%);
     font-size: 0.85rem;
     font-weight: 600;
+    white-space: nowrap;
     color: var(--text-strong);
     pointer-events: none;
+    transition:
+        left 0.16s ease,
+        color 0.16s ease;
+
+    &.is-over {
+        color: var(--accent-text);
+    }
 }
 
 // Scrubbable number field (drag to change, click to type)

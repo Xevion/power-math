@@ -7,8 +7,10 @@
         @pointerup="onUp"
         @pointercancel="onUp"
     >
-        <div class="ui-slider-fill" :style="{ width: `${ratio * 100}%` }"></div>
-        <span class="ui-slider-value">{{ display }}</span>
+        <div class="ui-slider-fill" :style="{ '--fill': `max(0.4rem, ${ratio * 100}%)` }"></div>
+        <span class="ui-slider-num" :class="{ 'is-over': onFill }" :style="{ left: `${numLeft}%` }">
+            {{ display }}
+        </span>
     </div>
 </template>
 
@@ -37,6 +39,12 @@
     const display = computed(() =>
         props.format ? props.format(props.modelValue) : String(props.modelValue),
     );
+
+    // Sit the value in the wider of the two regions: on the track while the fill
+    // is in the left half, on the fill once it passes halfway. It centres within
+    // that region, so it never lands across the fill's edge.
+    const onFill = computed(() => ratio.value >= 0.5);
+    const numLeft = computed(() => (onFill.value ? ratio.value / 2 : (1 + ratio.value) / 2) * 100);
 
     function setFromX(clientX: number) {
         const track = trackEl.value;
