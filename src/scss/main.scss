@@ -472,6 +472,22 @@ html {
 // Scrubbable number field (drag to change, click to type)
 .ui-scrub {
     justify-self: start;
+    width: 5.25rem;
+}
+
+// Display and edit boxes share box metrics so swapping them never shifts layout
+.ui-scrub-value,
+.ui-scrub-input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 2.05rem;
+    padding: 0 0.7rem;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
 }
 
 .ui-scrub-value {
@@ -479,14 +495,10 @@ html {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 4.5rem;
-    padding: 0.4rem 0.7rem;
-    border-radius: 0.5rem;
     overflow: hidden;
+    border: 1px solid transparent;
     background: var(--control-bg);
     color: var(--control-text);
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
     cursor: ew-resize;
     touch-action: none;
     user-select: none;
@@ -498,25 +510,33 @@ html {
     }
 }
 
-.ui-scrub-bar {
+// Inset from the field's rounded corners so the fill never clips to a corner
+.ui-scrub-track {
     position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 0.18rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.16rem;
+    height: 0.2rem;
+    border-radius: 999px;
+    background: var(--track);
+    overflow: hidden;
+}
+
+.ui-scrub-bar {
+    display: block;
+    height: 100%;
+    min-width: 0.2rem;
+    border-radius: 999px;
     background: var(--accent);
+    opacity: 0.8;
     transition: width 0.12s ease;
 }
 
 .ui-scrub-input {
-    width: 4.5rem;
-    padding: 0.4rem 0.7rem;
+    display: inline-block;
     border: 1px solid var(--accent);
-    border-radius: 0.5rem;
     background: var(--track);
     color: var(--text-strong);
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-    text-align: center;
     outline: none;
 
     &::selection {

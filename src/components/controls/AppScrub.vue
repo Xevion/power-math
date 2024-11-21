@@ -19,7 +19,9 @@
             @pointercancel="onUp"
         >
             <span class="ui-scrub-text">{{ modelValue }}</span>
-            <span class="ui-scrub-bar" :style="{ width: `${ratio * 100}%` }"></span>
+            <span class="ui-scrub-track">
+                <span class="ui-scrub-bar" :style="{ width: `${ratio * 100}%` }"></span>
+            </span>
         </span>
     </div>
 </template>
