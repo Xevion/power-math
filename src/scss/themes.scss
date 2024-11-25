@@ -1,64 +1,53 @@
-// Runtime theming layer. Bulma 0.9 has no native theming, so the themeable
-// surfaces are routed through CSS custom properties and flipped by the
-// data-theme attribute on <html>. Dark is the baseline (matches a no-JS load);
-// light overrides the tokens that need to change. The dark surfaces carry a
-// faint cool tint so they sit under the blue accent as a family.
-:root {
-    --app-bg: hsl(222, 16%, 7%);
-    --surface: hsl(222, 14%, 11%);
-    --surface-head: hsl(220, 13%, 15%);
-    --text: hsl(220, 15%, 90%);
-    --text-strong: hsl(220, 22%, 98%);
-    --border: hsl(220, 10%, 24%);
-    --icon: hsl(220, 14%, 87%);
-    --expr-text: hsl(220, 18%, 93%);
-    --expr-shadow: hsl(223, 24%, 4%);
-    --input-text: hsl(220, 12%, 82%);
-    --button-bg: hsl(222, 14%, 11%);
-    --button-darker-bg: hsl(223, 20%, 5%);
-    --button-text: hsl(220, 15%, 90%);
-    --modal-overlay: hsla(223, 32%, 4%, 0.62);
-    --hairline: hsl(220, 11%, 25%);
+// Runtime theming. Bulma 0.9 can't theme natively, so every themeable surface is
+// a CSS custom property flipped by data-theme on <html>. Dark is the baseline (it
+// matches a no-JS first paint); light is the alternate. Each token holds both
+// values as (dark, light) so the palettes can't drift out of structural sync.
+// The dark surfaces carry a faint cool tint to sit under the blue accent.
+$themes: (
+    // Surfaces, deepest background up to raised controls
+    app-bg: (hsl(222, 16%, 7%), hsl(0, 0%, 98%)),
+    track: (hsl(223, 16%, 9%), hsl(0, 0%, 88%)),
+    surface: (hsl(222, 14%, 11%), hsl(0, 0%, 100%)),
+    card-bg: (hsl(220, 13%, 14%), hsl(0, 0%, 97%)),
+    surface-head: (hsl(220, 13%, 15%), hsl(0, 0%, 96%)),
+    control-bg: (hsl(220, 12%, 20%), hsl(0, 0%, 92%)),
+    control-hover: (hsl(219, 12%, 26%), hsl(0, 0%, 86%)),
+    hairline: (hsl(220, 11%, 25%), hsl(0, 0%, 86%)),
+    border: (hsl(220, 10%, 24%), hsl(0, 0%, 80%)),
+    // Foreground text + icons
+    text: (hsl(220, 15%, 90%), hsl(0, 0%, 21%)),
+    text-strong: (hsl(220, 22%, 98%), hsl(0, 0%, 13%)),
+    control-text: (hsl(220, 14%, 87%), hsl(0, 0%, 22%)),
+    input-text: (hsl(220, 12%, 82%), hsl(0, 0%, 21%)),
+    icon: (hsl(220, 14%, 87%), hsl(0, 0%, 30%)),
+    expr-text: (hsl(220, 18%, 93%), hsl(0, 0%, 21%)),
+    button-text: (hsl(220, 15%, 90%), hsl(0, 0%, 21%)),
+    // Accent, buttons, effects
+    accent: (hsl(213, 94%, 61%), hsl(213, 88%, 47%)),
+    accent-text: (hsl(0, 0%, 100%), hsl(0, 0%, 100%)),
+    button-bg: (hsl(222, 14%, 11%), hsl(0, 0%, 100%)),
+    button-darker-bg: (hsl(223, 20%, 5%), hsl(0, 0%, 93%)),
+    expr-shadow: (hsl(223, 24%, 4%), hsl(0, 0%, 80%)),
+    modal-overlay: (hsla(223, 32%, 4%, 0.62), hsla(0, 0%, 40%, 0.45))
+);
 
-    // Settings controls (accent + flat control surfaces)
-    --accent: hsl(213, 94%, 61%);
-    --accent-text: hsl(0, 0%, 100%);
-    --control-bg: hsl(220, 12%, 20%);
-    --control-hover: hsl(219, 12%, 26%);
-    --control-text: hsl(220, 14%, 87%);
-    --track: hsl(223, 16%, 9%);
-    --card-bg: hsl(220, 13%, 14%);
+// Emit one palette's custom properties (1 = dark, 2 = light)
+@mixin theme($index) {
+    @each $name, $pair in $themes {
+        --#{$name}: #{nth($pair, $index)};
+    }
+}
+
+:root {
+    @include theme(1);
 }
 
 html[data-theme='light'] {
-    --app-bg: hsl(0, 0%, 98%);
-    --surface: hsl(0, 0%, 100%);
-    --surface-head: hsl(0, 0%, 96%);
-    --text: hsl(0, 0%, 21%);
-    --text-strong: hsl(0, 0%, 13%);
-    --border: hsl(0, 0%, 80%);
-    --icon: hsl(0, 0%, 30%);
-    --expr-text: hsl(0, 0%, 21%);
-    --expr-shadow: hsl(0, 0%, 80%);
-    --input-text: hsl(0, 0%, 21%);
-    --button-bg: hsl(0, 0%, 100%);
-    --button-darker-bg: hsl(0, 0%, 93%);
-    --button-text: hsl(0, 0%, 21%);
-    --modal-overlay: hsla(0, 0%, 40%, 0.45);
-    --hairline: hsl(0, 0%, 86%);
-
-    --accent: hsl(213, 88%, 48%);
-    --accent-text: hsl(0, 0%, 100%);
-    --control-bg: hsl(0, 0%, 92%);
-    --control-hover: hsl(0, 0%, 86%);
-    --control-text: hsl(0, 0%, 22%);
-    --track: hsl(0, 0%, 88%);
-    --card-bg: hsl(0, 0%, 97%);
+    @include theme(2);
 }
 
-// Override Bulma's baked-in chrome for the surfaces the app actually shows.
-// Difficulty buttons (.is-success/.is-warning/.is-danger) keep their semantic
-// colors via higher specificity, so the base .button rule is left unweighted.
+// Route the app chrome through the tokens. Difficulty buttons keep their own
+// semantic colors via higher specificity, so the base .button stays unweighted.
 html,
 body,
 #app {

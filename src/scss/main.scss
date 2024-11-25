@@ -28,6 +28,62 @@ $button-background-color: lighten($scheme-main, 0.5%);
 // Oruga component styles on top of Bulma (tooltip positioning, modal, etc.)
 @import '@oruga-ui/theme-bulma/dist/scss/bulma';
 
+// Shared idioms for the hand-rolled, flat controls. Kept as mixins so the
+// tactile interaction details (tap reset, focus ring, fill-on-hover) stay
+// identical across every control instead of being copied per selector.
+@mixin tap-reset {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+@mixin focus-ring($offset: 2px) {
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: $offset;
+    }
+}
+
+@mixin pill {
+    border-radius: 999px;
+}
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@mixin control-fill {
+    background: var(--control-bg);
+    transition: background 0.15s ease;
+
+    &:hover {
+        background: var(--control-hover);
+    }
+}
+
+@mixin thin-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--hairline) transparent;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: var(--hairline);
+        @include pill;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+}
+
 // Special button class that disables hover/active/focus effects
 .button {
     &.button-unhoverable {
@@ -73,9 +129,7 @@ body {
 
 .app-bar,
 .action-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    @include flex-between;
     flex: 0 0 auto;
     padding: 0.75rem 1.1rem;
 }
@@ -103,12 +157,10 @@ body {
 // stable box to measure against. The problem (see App.vue) is scaled down to
 // fit both this width and height, so it never clips on any aspect ratio.
 .stage-problem {
+    @include flex-center;
     flex: 1 1 auto;
     min-height: 0;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
 }
 
@@ -178,20 +230,20 @@ body {
     }
 }
 
-// Disable scrollbar
+// Hide the page scrollbar; the app owns its own scroll regions
 html {
-    scrollbar-width: none; /* For Firefox */
-    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
     &::-webkit-scrollbar {
-        width: 0px; /* For Chrome, Safari, and Opera */
+        width: 0;
     }
 }
 
 // Bare icon button used for the chrome controls (theme, settings, close)
 .icon-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    @include flex-center;
+    @include tap-reset;
     padding: 0.4rem;
     background: transparent;
     border: 0;
@@ -233,8 +285,7 @@ html {
 
 .sheet-grip {
     flex: 0 0 auto;
-    display: flex;
-    justify-content: center;
+    @include flex-center;
     padding: 0.7rem 0 0.35rem;
     cursor: grab;
     touch-action: none;
@@ -245,17 +296,15 @@ html {
 }
 
 .sheet-handle {
+    @include pill;
     width: 2.75rem;
     height: 0.32rem;
-    border-radius: 999px;
     background: var(--hairline);
 }
 
 .sheet-head {
+    @include flex-between;
     flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     padding: 0.1rem 1.1rem 0.7rem;
 }
 
@@ -267,22 +316,10 @@ html {
 }
 
 .sheet-body {
+    @include thin-scrollbar;
     flex: 1 1 auto;
     overflow-y: auto;
     padding: 0 0.9rem 1.1rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--hairline) transparent;
-
-    &::-webkit-scrollbar {
-        width: 8px;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: var(--hairline);
-        border-radius: 999px;
-    }
-    &::-webkit-scrollbar-track {
-        background: transparent;
-    }
 }
 
 // One generator's card
@@ -303,9 +340,7 @@ html {
 }
 
 .gen-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    @include flex-between;
     gap: 0.9rem;
 }
 
@@ -363,11 +398,10 @@ html {
 }
 
 .gen-preview-eq {
+    @include tap-reset;
     justify-self: start;
     color: var(--expr-text);
     cursor: pointer;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
     transition:
         opacity 0.18s ease,
         transform 0.18s ease;
@@ -385,6 +419,9 @@ html {
 
 // Pill toggle (generator enable + boolean fields)
 .ui-toggle {
+    @include pill;
+    @include tap-reset;
+    @include focus-ring;
     justify-self: start;
     position: relative;
     flex: 0 0 auto;
@@ -392,16 +429,9 @@ html {
     height: 1.5rem;
     padding: 0;
     border: 0;
-    border-radius: 999px;
     background: var(--control-bg);
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
     transition: background 0.18s ease;
-
-    &:focus-visible {
-        outline: 2px solid var(--accent);
-        outline-offset: 2px;
-    }
 
     &.is-on {
         background: var(--accent);
@@ -434,6 +464,8 @@ html {
 }
 
 .ui-seg {
+    @include tap-reset;
+    @include focus-ring(-2px);
     flex: 1 1 0;
     padding: 0.4rem 0.3rem;
     border: 0;
@@ -443,19 +475,12 @@ html {
     font-size: 0.85rem;
     font-weight: 550;
     cursor: pointer;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
     transition:
         background 0.15s ease,
         color 0.15s ease;
 
     &:hover {
         background: var(--control-hover);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--accent);
-        outline-offset: -2px;
     }
 
     &.is-active,
@@ -467,6 +492,7 @@ html {
 
 // Thick drag slider (frequency)
 .ui-slider {
+    @include tap-reset;
     position: relative;
     height: 1.7rem;
     border-radius: 0.5rem;
@@ -474,7 +500,6 @@ html {
     overflow: hidden;
     cursor: ew-resize;
     touch-action: none;
-    user-select: none;
 }
 
 // Full-width accent layer revealed left-to-right via clip-path
@@ -533,42 +558,36 @@ html {
 }
 
 .ui-scrub-value {
+    @include tap-reset;
+    @include control-fill;
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     border: 1px solid transparent;
-    background: var(--control-bg);
     color: var(--control-text);
     cursor: ew-resize;
     touch-action: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    transition: background 0.15s ease;
-
-    &:hover {
-        background: var(--control-hover);
-    }
 }
 
 // Inset from the field's rounded corners so the fill never clips to a corner
 .ui-scrub-track {
+    @include pill;
     position: absolute;
     left: 0.5rem;
     right: 0.5rem;
     bottom: 0.16rem;
     height: 0.2rem;
-    border-radius: 999px;
     background: var(--track);
     overflow: hidden;
 }
 
 .ui-scrub-bar {
+    @include pill;
     display: block;
     height: 100%;
     min-width: 0.2rem;
-    border-radius: 999px;
     background: var(--accent);
     opacity: 0.8;
     transition: width 0.12s ease;
