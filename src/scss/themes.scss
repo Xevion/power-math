@@ -1,32 +1,33 @@
 // Runtime theming layer. Bulma 0.9 has no native theming, so the themeable
 // surfaces are routed through CSS custom properties and flipped by the
 // data-theme attribute on <html>. Dark is the baseline (matches a no-JS load);
-// light overrides the tokens that need to change.
+// light overrides the tokens that need to change. The dark surfaces carry a
+// faint cool tint so they sit under the blue accent as a family.
 :root {
-    --app-bg: hsl(0, 0%, 6%);
-    --surface: hsl(0, 0%, 9%);
-    --surface-head: hsl(0, 0%, 13%);
-    --text: hsl(0, 0%, 91%);
-    --text-strong: hsl(0, 0%, 97%);
-    --border: hsl(0, 0%, 20%);
-    --icon: hsl(0, 0%, 91%);
-    --expr-text: hsl(0, 0%, 91%);
-    --expr-shadow: hsl(0, 0%, 5%);
-    --input-text: hsl(0, 0%, 80%);
-    --button-bg: hsl(0, 0%, 9%);
-    --button-darker-bg: hsl(0, 0%, 3%);
-    --button-text: hsl(0, 0%, 91%);
-    --modal-overlay: hsla(0, 0%, 6%, 0.6);
-    --hairline: hsl(0, 0%, 22%);
+    --app-bg: hsl(222, 16%, 7%);
+    --surface: hsl(222, 14%, 11%);
+    --surface-head: hsl(220, 13%, 15%);
+    --text: hsl(220, 15%, 90%);
+    --text-strong: hsl(220, 22%, 98%);
+    --border: hsl(220, 10%, 24%);
+    --icon: hsl(220, 14%, 87%);
+    --expr-text: hsl(220, 18%, 93%);
+    --expr-shadow: hsl(223, 24%, 4%);
+    --input-text: hsl(220, 12%, 82%);
+    --button-bg: hsl(222, 14%, 11%);
+    --button-darker-bg: hsl(223, 20%, 5%);
+    --button-text: hsl(220, 15%, 90%);
+    --modal-overlay: hsla(223, 32%, 4%, 0.62);
+    --hairline: hsl(220, 11%, 25%);
 
     // Settings controls (accent + flat control surfaces)
-    --accent: hsl(212, 92%, 56%);
+    --accent: hsl(213, 94%, 61%);
     --accent-text: hsl(0, 0%, 100%);
-    --control-bg: hsl(0, 0%, 17%);
-    --control-hover: hsl(0, 0%, 23%);
-    --control-text: hsl(0, 0%, 88%);
-    --track: hsl(0, 0%, 11%);
-    --card-bg: hsl(0, 0%, 12%);
+    --control-bg: hsl(220, 12%, 20%);
+    --control-hover: hsl(219, 12%, 26%);
+    --control-text: hsl(220, 14%, 87%);
+    --track: hsl(223, 16%, 9%);
+    --card-bg: hsl(220, 13%, 14%);
 }
 
 html[data-theme='light'] {
@@ -46,7 +47,7 @@ html[data-theme='light'] {
     --modal-overlay: hsla(0, 0%, 40%, 0.45);
     --hairline: hsl(0, 0%, 86%);
 
-    --accent: hsl(212, 88%, 48%);
+    --accent: hsl(213, 88%, 48%);
     --accent-text: hsl(0, 0%, 100%);
     --control-bg: hsl(0, 0%, 92%);
     --control-hover: hsl(0, 0%, 86%);
