@@ -214,6 +214,7 @@
 
     onMounted(() => {
         initTheme();
+        answerEl.value?.focus();
         window.addEventListener('keyup', onKeyup);
         window.addEventListener('keydown', onKeydown);
         nextQuestion();

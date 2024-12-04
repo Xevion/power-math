@@ -14,11 +14,19 @@
             spellcheck="false"
             @input="onInput"
             @keydown="onKeydown"
-            @blur="commit"
+            @blur="commit()"
         />
         <span
             v-else
+            ref="valueEl"
             class="ui-scrub-value"
+            role="spinbutton"
+            tabindex="0"
+            :aria-label="label"
+            :aria-valuemin="min"
+            :aria-valuemax="max"
+            :aria-valuenow="modelValue"
+            @keydown="onValueKeydown"
             @pointerdown="onDown"
             @pointermove="onMove"
             @pointerup="onUp"
@@ -56,6 +64,7 @@
     const warn = ref(false);
     const warning = ref('');
     const inputEl = ref<HTMLInputElement | null>(null);
+    const valueEl = ref<HTMLElement | null>(null);
 
     let startX = 0;
     let startValue = 0;
@@ -111,6 +120,26 @@
         if (!sticky) warnTimer = window.setTimeout(() => (warn.value = false), 1600);
     }
 
+    // Arrows, Page keys and Home/End adjust the value; Enter opens typed entry
+    function onValueKeydown(e: KeyboardEvent) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            startEdit();
+            return;
+        }
+        const next = keyTarget(e, props.modelValue, props.min, props.max, props.step);
+        if (next === null) return;
+        e.preventDefault();
+        if (next !== props.modelValue) emit('update:modelValue', next);
+    }
+
+    // Hand focus back to the display after Enter/Escape so keyboard users keep
+    // their place; leaving by Tab or click goes wherever the user sent it
+    function endEdit() {
+        editing.value = false;
+        nextTick(() => valueEl.value?.focus());
+    }
+
     function startEdit() {
         draft.value = String(props.modelValue);
         warn.value = false;
@@ -150,10 +179,10 @@
             e.preventDefault();
             const entry = checkEntry(draft.value, props.min, props.max);
             if ('error' in entry) flagWarning(entry.error, true);
-            else commit();
+            else commit(true);
         } else if (e.key === 'Escape') {
             e.preventDefault();
-            editing.value = false;
+            endEdit();
         } else {
             // Up/Down (and PageUp/PageDown) nudge the typed number; Left/Right and
             // Home/End stay with the caret
@@ -175,10 +204,11 @@
 
     // Enter commits a valid entry; leaving the field with an invalid one drops it
     // rather than guessing what was meant
-    function commit() {
+    function commit(refocus = false) {
         if (!editing.value) return;
         const entry = checkEntry(draft.value, props.min, props.max);
-        editing.value = false;
+        if (refocus) endEdit();
+        else editing.value = false;
         if ('value' in entry && entry.value !== props.modelValue) {
             emit('update:modelValue', entry.value);
         }

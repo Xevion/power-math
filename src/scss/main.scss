@@ -269,6 +269,7 @@ html {
 }
 
 .sheet {
+    outline: none;
     width: 100%;
     max-width: 36rem;
     max-height: 88vh;
@@ -493,6 +494,7 @@ html {
 // Thick drag slider (frequency)
 .ui-slider {
     @include tap-reset;
+    @include focus-ring(-2px);
     position: relative;
     height: 1.7rem;
     border-radius: 0.5rem;
@@ -578,6 +580,7 @@ html {
 
 .ui-scrub-value {
     @include tap-reset;
+    @include focus-ring(-2px);
     @include control-fill;
     position: relative;
     display: inline-flex;

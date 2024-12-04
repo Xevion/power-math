@@ -1,5 +1,13 @@
 <template>
-    <div class="sheet" role="dialog" aria-modal="true" aria-label="Settings" :style="sheetStyle">
+    <div
+        ref="sheetEl"
+        class="sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Settings"
+        tabindex="-1"
+        :style="sheetStyle"
+    >
         <div
             class="sheet-grip"
             @pointerdown="onGripDown"
@@ -32,7 +40,11 @@
                     <AppToggle v-model="state.enabled" />
                 </div>
 
-                <div class="gen-collapse" :class="{ 'is-open': state.enabled }">
+                <div
+                    class="gen-collapse"
+                    :class="{ 'is-open': state.enabled }"
+                    :inert="state.enabled ? undefined : true"
+                >
                     <div class="gen-body">
                         <span class="gen-label">Difficulty</span>
                         <AppSegmented
@@ -42,7 +54,7 @@
                         />
 
                         <span class="gen-label">Frequency</span>
-                        <AppSlider v-model="state.weight" :min="1" :max="5" />
+                        <AppSlider v-model="state.weight" :min="1" :max="5" label="Frequency" />
 
                         <template v-for="field in state.spec.fields" :key="field.key">
                             <span class="gen-label">{{ field.label }}</span>
@@ -73,6 +85,7 @@
 
 <script setup lang="ts">
     import { computed, ref } from 'vue';
+    import { useFocusTrap } from '@/composables/useFocusTrap';
     import { X } from 'lucide-vue-next';
     import AppToggle from '@/components/controls/AppToggle.vue';
     import AppSegmented from '@/components/controls/AppSegmented.vue';
@@ -84,6 +97,9 @@
 
     defineProps<{ problems: GeneratorState[] }>();
     const emit = defineEmits<{ close: [] }>();
+
+    const sheetEl = ref<HTMLElement | null>(null);
+    useFocusTrap(sheetEl);
 
     function difficultyOptions(state: GeneratorState) {
         return state.spec.difficulties.map((difficulty) => ({

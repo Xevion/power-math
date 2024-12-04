@@ -2,6 +2,14 @@
     <div
         ref="trackEl"
         class="ui-slider"
+        role="slider"
+        tabindex="0"
+        :aria-label="label"
+        :aria-valuemin="min"
+        :aria-valuemax="max"
+        :aria-valuenow="modelValue"
+        :aria-valuetext="display"
+        @keydown="onKeydown"
         @pointerdown="onDown"
         @pointermove="onMove"
         @pointerup="onUp"
@@ -16,6 +24,7 @@
 
 <script setup lang="ts">
     import { computed, ref } from 'vue';
+    import { keyTarget } from '@/numeric';
 
     const props = withDefaults(
         defineProps<{
@@ -24,6 +33,7 @@
             max: number;
             step?: number;
             format?: (value: number) => string;
+            label?: string;
         }>(),
         { step: 1 },
     );
@@ -55,6 +65,13 @@
         const stepped = Math.round(raw / props.step) * props.step;
         const clamped = Math.min(props.max, Math.max(props.min, stepped));
         if (clamped !== props.modelValue) emit('update:modelValue', clamped);
+    }
+
+    function onKeydown(e: KeyboardEvent) {
+        const next = keyTarget(e, props.modelValue, props.min, props.max, props.step);
+        if (next === null) return;
+        e.preventDefault();
+        if (next !== props.modelValue) emit('update:modelValue', next);
     }
 
     function onDown(e: PointerEvent) {
