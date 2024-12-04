@@ -2,13 +2,23 @@
     <div id="app">
         <header class="app-bar">
             <span class="app-title">power-math</span>
-            <button
-                class="icon-btn"
-                @click="toggleTheme()"
-                :aria-label="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
-            >
-                <component :is="theme === 'dark' ? Moon : Sun" :size="22" />
-            </button>
+            <div class="app-actions">
+                <button
+                    class="icon-btn"
+                    @click="isHelpActive = true"
+                    aria-label="Keyboard shortcuts"
+                    title="Keyboard shortcuts (?)"
+                >
+                    <Keyboard :size="22" />
+                </button>
+                <button
+                    class="icon-btn"
+                    @click="toggleTheme()"
+                    :aria-label="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+                >
+                    <component :is="theme === 'dark' ? Moon : Sun" :size="22" />
+                </button>
+            </div>
         </header>
 
         <main class="stage">
@@ -69,14 +79,20 @@
                     <SettingsMenu :problems="problems" @close="isSettingsMenuActive = false" />
                 </div>
             </Transition>
+            <Transition name="dialog">
+                <div v-if="isHelpActive" class="help-overlay" @click.self="isHelpActive = false">
+                    <ShortcutsHelp @close="isHelpActive = false" />
+                </div>
+            </Transition>
         </Teleport>
     </div>
 </template>
 
 <script setup lang="ts">
     import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-    import { Moon, Settings, Sun } from 'lucide-vue-next';
+    import { Keyboard, Moon, Settings, Sun } from 'lucide-vue-next';
     import SettingsMenu from '@/components/SettingsMenu.vue';
+    import ShortcutsHelp from '@/components/ShortcutsHelp.vue';
     import { useProblems } from '@/composables/useProblems';
     import { useTheme } from '@/composables/useTheme';
     import { parseAnswer, sanitizeAnswer } from '@/answer';
@@ -93,6 +109,7 @@
     const currentAnimation = ref('');
     const chances = ref(3);
     const isSettingsMenuActive = ref(false);
+    const isHelpActive = ref(false);
     const introActive = ref(false);
 
     const expression = computed(() => currentQuestion.value?.text ?? '');
@@ -192,8 +209,8 @@
     }
 
     function onKeyup(e: KeyboardEvent) {
-        // The settings sheet owns the keyboard while it is open
-        if (isSettingsMenuActive.value) return;
+        // The settings sheet and the shortcuts list own the keyboard while open
+        if (isSettingsMenuActive.value || isHelpActive.value) return;
 
         if (e.key === 'ArrowUp') {
             nextQuestion();
@@ -202,11 +219,17 @@
         }
     }
 
-    // Escape closes the sheet on keydown so a control that already used it (to
-    // cancel typing a number) can claim it first via preventDefault
+    // Escape closes the topmost layer on keydown so a control that already used
+    // it (to cancel typing a number) can claim it first via preventDefault. The
+    // answer and number fields reject "?", so it is free to mean help everywhere.
     function onKeydown(e: KeyboardEvent) {
-        if (e.key === 'Escape' && isSettingsMenuActive.value && !e.defaultPrevented) {
-            isSettingsMenuActive.value = false;
+        if (e.defaultPrevented) return;
+        if (e.key === 'Escape') {
+            if (isHelpActive.value) isHelpActive.value = false;
+            else if (isSettingsMenuActive.value) isSettingsMenuActive.value = false;
+        } else if (e.key === '?' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            e.preventDefault();
+            isHelpActive.value = !isHelpActive.value;
         }
     }
 

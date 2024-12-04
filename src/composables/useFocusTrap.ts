@@ -18,7 +18,8 @@ export function useFocusTrap(container: Ref<HTMLElement | null>) {
 
     function onKeydown(e: KeyboardEvent) {
         const root = container.value;
-        if (e.key !== 'Tab' || !root) return;
+        // Another trap may be stacked on top; only act while focus is in ours
+        if (e.key !== 'Tab' || !root || !root.contains(document.activeElement)) return;
 
         const items = focusables(root);
         if (items.length === 0) {
