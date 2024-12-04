@@ -515,6 +515,11 @@ html {
     transition: clip-path 0.12s ease;
 }
 
+// No easing while dragging, so the fill stays glued to the pointer's travel
+.ui-slider.is-dragging .ui-slider-fill {
+    transition: none;
+}
+
 // The value rides the wider region (track or fill) so it never sits across the
 // fill's edge; it slides and recolours as the fill passes underneath it
 .ui-slider-num {

@@ -27,10 +27,10 @@
             :aria-valuemax="max"
             :aria-valuenow="modelValue"
             @keydown="onValueKeydown"
-            @pointerdown="onDown"
-            @pointermove="onMove"
-            @pointerup="onUp"
-            @pointercancel="onUp"
+            @pointerdown="drag.onDown"
+            @pointermove="drag.onMove"
+            @pointerup="drag.onUp"
+            @pointercancel="drag.onUp"
         >
             <span class="ui-scrub-text">{{ modelValue }}</span>
             <span class="ui-scrub-track">
@@ -45,6 +45,7 @@
 
 <script setup lang="ts">
     import { computed, nextTick, ref } from 'vue';
+    import { useLockedDrag } from '@/composables/useLockedDrag';
     import { allowsPrefix, checkEntry, clamp, keyTarget, rejectionReason } from '@/numeric';
 
     const props = withDefaults(
@@ -66,10 +67,7 @@
     const inputEl = ref<HTMLInputElement | null>(null);
     const valueEl = ref<HTMLElement | null>(null);
 
-    let startX = 0;
     let startValue = 0;
-    let moved = false;
-    let active = false;
 
     // Fraction of the way through the range, for the bottom progress bar
     const ratio = computed(() => {
@@ -87,29 +85,23 @@
     const rangeHint = computed(() => `${props.min} to ${props.max}`);
     const hint = computed(() => (warn.value ? warning.value : rangeHint.value));
 
-    function onDown(e: PointerEvent) {
-        (e.target as HTMLElement).setPointerCapture(e.pointerId);
-        active = true;
-        moved = false;
-        startX = e.clientX;
-        startValue = props.modelValue;
-    }
-    function onMove(e: PointerEvent) {
-        if (!active) return;
-        const dx = e.clientX - startX;
-        if (Math.abs(dx) > 3) moved = true;
-        const next = clamp(
-            startValue + Math.round(dx / pxPerStep.value) * props.step,
-            props.min,
-            props.max,
-        );
-        if (next !== props.modelValue) emit('update:modelValue', next);
-    }
-    function onUp() {
-        active = false;
-        // A press that never dragged is a click: fall through to keyboard entry
-        if (!moved) startEdit();
-    }
+    const drag = useLockedDrag({
+        start() {
+            startValue = props.modelValue;
+        },
+        move(_, { total }) {
+            const next = clamp(
+                startValue + Math.round(total / pxPerStep.value) * props.step,
+                props.min,
+                props.max,
+            );
+            if (next !== props.modelValue) emit('update:modelValue', next);
+        },
+        end(moved) {
+            // A press that never dragged is a click: fall through to keyboard entry
+            if (!moved) startEdit();
+        },
+    });
 
     let warnTimer: number | undefined;
 

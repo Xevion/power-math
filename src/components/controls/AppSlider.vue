@@ -2,6 +2,7 @@
     <div
         ref="trackEl"
         class="ui-slider"
+        :class="{ 'is-dragging': dragging }"
         role="slider"
         tabindex="0"
         :aria-label="label"
@@ -10,10 +11,10 @@
         :aria-valuenow="modelValue"
         :aria-valuetext="display"
         @keydown="onKeydown"
-        @pointerdown="onDown"
-        @pointermove="onMove"
-        @pointerup="onUp"
-        @pointercancel="onUp"
+        @pointerdown="drag.onDown"
+        @pointermove="drag.onMove"
+        @pointerup="drag.onUp"
+        @pointercancel="drag.onUp"
     >
         <div class="ui-slider-fill" :style="{ '--fill': `max(0.4rem, ${ratio * 100}%)` }"></div>
         <span class="ui-slider-num" :class="{ 'is-over': onFill }" :style="{ left: `${numLeft}%` }">
@@ -24,6 +25,7 @@
 
 <script setup lang="ts">
     import { computed, ref } from 'vue';
+    import { useLockedDrag } from '@/composables/useLockedDrag';
     import { keyTarget } from '@/numeric';
 
     const props = withDefaults(
@@ -56,33 +58,49 @@
     const onFill = computed(() => ratio.value >= 0.5);
     const numLeft = computed(() => (onFill.value ? ratio.value / 2 : (1 + ratio.value) / 2) * 100);
 
-    function setFromX(clientX: number) {
-        const track = trackEl.value;
-        if (!track) return;
-        const rect = track.getBoundingClientRect();
-        const r = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
-        const raw = props.min + r * (props.max - props.min);
+    function setFromRatio(r: number) {
+        const raw = props.min + Math.min(1, Math.max(0, r)) * (props.max - props.min);
         const stepped = Math.round(raw / props.step) * props.step;
         const clamped = Math.min(props.max, Math.max(props.min, stepped));
         if (clamped !== props.modelValue) emit('update:modelValue', clamped);
     }
+
+    // Position along the track in px. A mouse drag moves this by relative travel
+    // (the cursor is locked and clamps at the ends); touch maps straight from x.
+    let pos = 0;
+
+    function trackRect() {
+        return trackEl.value?.getBoundingClientRect();
+    }
+    function posFromX(clientX: number) {
+        const rect = trackRect();
+        if (!rect) return 0;
+        return Math.min(rect.width, Math.max(0, clientX - rect.left));
+    }
+
+    const drag = useLockedDrag(
+        {
+            start(e) {
+                dragging.value = true;
+                pos = posFromX(e.clientX);
+                setFromRatio(pos / (trackRect()?.width || 1));
+            },
+            move(e, { dx, relative }) {
+                const width = trackRect()?.width || 1;
+                pos = relative ? Math.min(width, Math.max(0, pos + dx)) : posFromX(e.clientX);
+                setFromRatio(pos / width);
+            },
+            end() {
+                dragging.value = false;
+            },
+        },
+        0,
+    );
 
     function onKeydown(e: KeyboardEvent) {
         const next = keyTarget(e, props.modelValue, props.min, props.max, props.step);
         if (next === null) return;
         e.preventDefault();
         if (next !== props.modelValue) emit('update:modelValue', next);
-    }
-
-    function onDown(e: PointerEvent) {
-        (e.target as HTMLElement).setPointerCapture(e.pointerId);
-        dragging.value = true;
-        setFromX(e.clientX);
-    }
-    function onMove(e: PointerEvent) {
-        if (dragging.value) setFromX(e.clientX);
-    }
-    function onUp() {
-        dragging.value = false;
     }
 </script>
