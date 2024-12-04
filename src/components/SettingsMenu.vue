@@ -52,6 +52,7 @@
                                 :min="field.min"
                                 :max="field.max"
                                 :step="field.step ?? 1"
+                                :label="field.label"
                                 @update:model-value="(v: number) => setValue(state, field.key, v)"
                             />
                             <AppToggle

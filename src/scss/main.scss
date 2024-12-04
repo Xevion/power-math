@@ -538,8 +538,27 @@ html {
 
 // Scrubbable number field (drag to change, click to type)
 .ui-scrub {
+    position: relative;
     justify-self: start;
     width: 5.25rem;
+}
+
+// Range / warning note beside the field while typing a value
+.ui-scrub-hint {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 0.65rem);
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    color: var(--text);
+    opacity: 0.6;
+    transition: color 0.15s ease;
+
+    &.is-warn {
+        color: var(--warn);
+        opacity: 1;
+    }
 }
 
 // Display and edit boxes share box metrics so swapping them never shifts layout
@@ -599,6 +618,12 @@ html {
     background: var(--track);
     color: var(--text-strong);
     outline: none;
+
+    transition: border-color 0.15s ease;
+
+    &.is-warn {
+        border-color: var(--warn);
+    }
 
     &::selection {
         background: var(--accent);

@@ -192,11 +192,8 @@
     }
 
     function onKeyup(e: KeyboardEvent) {
-        // While the settings sheet is open, only listen for Escape to close it
-        if (isSettingsMenuActive.value) {
-            if (e.key === 'Escape') isSettingsMenuActive.value = false;
-            return;
-        }
+        // The settings sheet owns the keyboard while it is open
+        if (isSettingsMenuActive.value) return;
 
         if (e.key === 'ArrowUp') {
             nextQuestion();
@@ -205,11 +202,20 @@
         }
     }
 
+    // Escape closes the sheet on keydown so a control that already used it (to
+    // cancel typing a number) can claim it first via preventDefault
+    function onKeydown(e: KeyboardEvent) {
+        if (e.key === 'Escape' && isSettingsMenuActive.value && !e.defaultPrevented) {
+            isSettingsMenuActive.value = false;
+        }
+    }
+
     let resizeObserver: ResizeObserver | null = null;
 
     onMounted(() => {
         initTheme();
         window.addEventListener('keyup', onKeyup);
+        window.addEventListener('keydown', onKeydown);
         nextQuestion();
 
         // Briefly draw the eye to the tries indicator when play begins
@@ -225,6 +231,7 @@
 
     onUnmounted(() => {
         window.removeEventListener('keyup', onKeyup);
+        window.removeEventListener('keydown', onKeydown);
         resizeObserver?.disconnect();
     });
 </script>
