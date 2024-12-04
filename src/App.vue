@@ -23,9 +23,22 @@
                 </div>
             </div>
             <div class="stage-input">
-                <o-field id="input">
-                    <o-input v-model="answer" :class="inputClass" @keyup.enter="checkAnswer()" />
-                </o-field>
+                <div id="input" class="control">
+                    <input
+                        ref="answerEl"
+                        v-model="answer"
+                        class="input"
+                        :class="inputClass"
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        aria-label="Answer"
+                        @input="onAnswerInput"
+                        @keyup.enter="checkAnswer()"
+                    />
+                </div>
             </div>
         </main>
 
@@ -66,13 +79,14 @@
     import SettingsMenu from '@/components/SettingsMenu.vue';
     import { useProblems } from '@/composables/useProblems';
     import { useTheme } from '@/composables/useTheme';
-    import { parseAnswer } from '@/answer';
+    import { parseAnswer, sanitizeAnswer } from '@/answer';
     import type { GeneratedProblem } from '@/types';
 
     const { problems, getProblem } = useProblems();
     const { theme, toggleTheme, initTheme } = useTheme();
 
     const answer = ref('');
+    const answerEl = ref<HTMLInputElement | null>(null);
     const currentQuestion = ref<GeneratedProblem | null>(null);
     const inputClass = ref('');
     const allowInputSubmit = ref(true);
@@ -153,6 +167,20 @@
             allowInputSubmit.value = false;
             setTimeout(unlockInput, 500);
         }
+    }
+
+    // Strip anything that can't be part of an integer answer, however it got in
+    // (typing, paste, drop). Writing the DOM value directly keeps the caret and
+    // avoids a stale rejected character when the model value doesn't change.
+    function onAnswerInput(e: Event) {
+        const el = e.target as HTMLInputElement;
+        const clean = sanitizeAnswer(el.value);
+        if (clean !== el.value) {
+            const caret = (el.selectionStart ?? clean.length) - (el.value.length - clean.length);
+            el.value = clean;
+            el.setSelectionRange(Math.max(0, caret), Math.max(0, caret));
+        }
+        answer.value = clean;
     }
 
     function clearInputClass() {
