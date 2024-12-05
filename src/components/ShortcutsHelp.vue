@@ -52,8 +52,11 @@
             title: 'Solving',
             rows: [
                 { keys: ['Enter'], label: 'Check your answer' },
-                { keys: ['Up'], label: 'Skip to a new problem' },
-                { keys: ['Right'], label: 'Count it as solved and move on' },
+                { keys: ['Up'], label: 'Skip to a new problem, clearing the box' },
+                {
+                    keys: ['Right'],
+                    label: 'Count it as solved and move on, while the box is empty',
+                },
                 { keys: ['?'], label: 'Show or hide this list' },
                 { keys: ['Esc'], label: 'Close this list or the settings' },
             ],

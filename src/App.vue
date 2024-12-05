@@ -143,6 +143,8 @@
     watch(expression, fitExpression, { flush: 'post' });
 
     function nextQuestion(fail = false) {
+        // Whatever was typed belongs to the problem being left behind
+        answer.value = '';
         const problem = getProblem();
         if (currentQuestion.value == null) {
             currentQuestion.value = problem;
@@ -171,7 +173,6 @@
             inputClass.value = 'correct';
             setTimeout(clearInputClass, 500);
             nextQuestion();
-            answer.value = '';
         } else {
             if (--chances.value === 0) {
                 nextQuestion(true);
@@ -216,7 +217,8 @@
 
         if (e.key === 'ArrowUp') {
             nextQuestion();
-        } else if (e.key === 'ArrowRight') {
+        } else if (e.key === 'ArrowRight' && answer.value === '') {
+            // With text in the box, Right is caret movement, not a shortcut
             checkAnswer(true);
         }
     }
