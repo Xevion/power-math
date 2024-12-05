@@ -153,7 +153,7 @@
             draft.value = candidate;
             if (candidate !== raw) {
                 el.value = candidate;
-                flagWarning(`Digits only, ${rangeHint.value}`);
+                flagWarning('Digits only');
             } else {
                 warn.value = false;
             }

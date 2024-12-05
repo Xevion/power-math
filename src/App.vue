@@ -36,7 +36,7 @@
                 <div id="input" class="control">
                     <input
                         ref="answerEl"
-                        v-model="answer"
+                        :value="answer"
                         class="input"
                         :class="inputClass"
                         type="text"
@@ -190,6 +190,8 @@
     // (typing, paste, drop). Writing the DOM value directly keeps the caret and
     // avoids a stale rejected character when the model value doesn't change.
     function onAnswerInput(e: Event) {
+        // Leave an in-progress IME composition alone; it fires another input when committed
+        if ((e as InputEvent).isComposing) return;
         const el = e.target as HTMLInputElement;
         const clean = sanitizeAnswer(el.value);
         if (clean !== el.value) {
@@ -237,7 +239,9 @@
 
     onMounted(() => {
         initTheme();
-        answerEl.value?.focus();
+        // Only grab focus where a physical keyboard is likely; on touch it would
+        // pop the on-screen keyboard over the problem before anyone asked for it
+        if (window.matchMedia('(pointer: fine)').matches) answerEl.value?.focus();
         window.addEventListener('keyup', onKeyup);
         window.addEventListener('keydown', onKeydown);
         nextQuestion();

@@ -40,7 +40,7 @@ export type Entry = { value: number } | { error: string };
 
 // Validate a finished entry, naming the bound it broke.
 export function checkEntry(draft: string, min: number, max: number): Entry {
-    if (!/^-?\d+$/.test(draft)) return { error: `Enter a number from ${min} to ${max}` };
+    if (!/^-?\d+$/.test(draft)) return { error: `Enter ${min} to ${max}` };
     const value = Number.parseInt(draft, 10);
     if (value < min) return { error: `Minimum is ${min}` };
     if (value > max) return { error: `Maximum is ${max}` };
@@ -53,7 +53,7 @@ export function rejectionReason(draft: string, min: number, max: number): string
     if (draft.startsWith('-') && min >= 0) return `Minimum is ${min}`;
     if (n > max) return `Maximum is ${max}`;
     if (n < min) return `Minimum is ${min}`;
-    return `Enter a number from ${min} to ${max}`;
+    return `Enter ${min} to ${max}`;
 }
 
 interface KeyLike {
