@@ -25,7 +25,7 @@
             </button>
         </header>
 
-        <section class="sheet-body">
+        <section class="sheet-body" tabindex="-1">
             <div
                 class="gen-card"
                 :class="{ 'is-off': !state.enabled }"

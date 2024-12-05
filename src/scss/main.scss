@@ -43,6 +43,15 @@ $button-background-color: lighten($scheme-main, 0.5%);
     }
 }
 
+// For controls that sit flush in a clipped container or fill themselves with the
+// accent: drawn inside the box, in the text colour so it reads on either
+@mixin focus-ring-inset {
+    &:focus-visible {
+        outline: 2px solid var(--text-strong);
+        outline-offset: -2px;
+    }
+}
+
 @mixin pill {
     border-radius: 999px;
 }
@@ -244,6 +253,8 @@ html {
 .icon-btn {
     @include flex-center;
     @include tap-reset;
+    @include focus-ring;
+    border-radius: 0.5rem;
     padding: 0.4rem;
     background: transparent;
     border: 0;
@@ -411,6 +422,7 @@ kbd {
 
 .sheet-body {
     @include thin-scrollbar;
+    outline: none;
     flex: 1 1 auto;
     overflow-y: auto;
     padding: 0 0.9rem 1.1rem;
@@ -559,7 +571,7 @@ kbd {
 
 .ui-seg {
     @include tap-reset;
-    @include focus-ring(-2px);
+    @include focus-ring-inset;
     flex: 1 1 0;
     padding: 0.4rem 0.3rem;
     border: 0;
@@ -582,12 +594,16 @@ kbd {
         background: var(--accent);
         color: var(--accent-text);
     }
+
+    &.is-active:focus-visible {
+        outline-color: var(--accent-text);
+    }
 }
 
 // Thick drag slider (frequency)
 .ui-slider {
     @include tap-reset;
-    @include focus-ring(-2px);
+    @include focus-ring-inset;
     position: relative;
     height: 1.7rem;
     border-radius: 0.5rem;
@@ -678,7 +694,7 @@ kbd {
 
 .ui-scrub-value {
     @include tap-reset;
-    @include focus-ring(-2px);
+    @include focus-ring-inset;
     @include control-fill;
     position: relative;
     display: inline-flex;
