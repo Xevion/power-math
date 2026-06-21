@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <link rel="icon" href="/power-math/favicon.ico" />
+
+        <title>Power Math</title>
+        <meta
+            name="description"
+            content="Practice random math problems in the browser, from simple arithmetic on up. Pick the problem types and difficulty, then drill at your own pace."
+        />
+        <meta name="theme-color" content="#0f0f0f" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://xevion.github.io/power-math/" />
+        <meta property="og:title" content="Power Math" />
+        <meta
+            property="og:description"
+            content="Practice random math problems in the browser, from simple arithmetic on up."
+        />
+        <meta property="og:image" content="https://xevion.github.io/power-math/og-image.png" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Power Math" />
+        <meta
+            name="twitter:description"
+            content="Practice random math problems in the browser, from simple arithmetic on up."
+        />
+        <meta name="twitter:image" content="https://xevion.github.io/power-math/og-image.png" />
+
+        <script>
+            // Resolve the theme before first paint so there is no flash of the
+            // wrong background. Kept in sync afterwards by useTheme.
+            (function () {
+                try {
+                    var stored = localStorage.getItem('power-math-theme');
+                    var theme =
+                        stored === 'light' || stored === 'dark'
+                            ? stored
+                            : window.matchMedia('(prefers-color-scheme: dark)').matches
+                              ? 'dark'
+                              : 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                } catch (e) {}
+            })();
+        </script>
+      <script type="module" crossorigin src="/power-math/assets/index-XaTbf1MQ.js"></script>
+      <link rel="stylesheet" crossorigin href="/power-math/assets/index-DeK-hrPn.css">
+    </head>
+    <body>
+        <noscript>
+            <strong>power-math needs JavaScript to run. Please enable it to continue.</strong>
+        </noscript>
+        <div id="app"></div>
+    </body>
+</html>
